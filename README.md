@@ -1,3 +1,9 @@
+![Mi Vaquita](https://res.cloudinary.com/dmaviub4l/image/upload/v1711547483/h4mcpdoav6plnxmjbpzx.svg)
+
+# Mi Vaquita APP
+
+**My Vaquita APP is a user-friendly application designed to manage expenses with friends or family effortlessly and seamlessly.**
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
