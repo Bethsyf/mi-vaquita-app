@@ -1,9 +1,11 @@
 import React from 'react';
 
-const ButtonControl = () => {
+const ButtonControl = ({ text, styles, onClickFn }) => {
+  const buttonStyles = `px-4 py-1 bg-[#36190D] text-white rounded-md hover:bg-blue-600 ${styles}`;
+
   return (
-    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-      Haz clic
+    <button className={buttonStyles} onClick={onClickFn}>
+      {text}
     </button>
   );
 };

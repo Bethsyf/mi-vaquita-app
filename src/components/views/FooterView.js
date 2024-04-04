@@ -7,7 +7,7 @@ const FooterView = () => {
       <img
         src="logo-wwc.png"
         alt="Workflow"
-        className="w-20 h-25 m-auto md:hidden"
+        className="w-20 h-25 m-auto md:hidden mb-4"
       />
       <div className="hidden text-center fixed bottom-0 left-0 w-full justify-between font-bold py-4 px-10 text-xl md:flex">
         <p>
