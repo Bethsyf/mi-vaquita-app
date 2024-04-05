@@ -5,6 +5,7 @@ import CardView from '../../components/views/CardView';
 import ButtonControl from '../../components/controls/ButtonControl';
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateGroupView from '../../components/views/CreateGroupView';
+import axios from 'axios';
 
 const GroupsPage = () => {
   const [groups, setGroups] = useState([]);
@@ -19,10 +20,10 @@ const GroupsPage = () => {
   };
 
   const getGroups = () => {
-    fetch('http://localhost:5000/api/groups')
-      .then((response) => response.json())
-      .then((data) => {
-        const sortedGroups = data.sort(
+    axios
+      .get('http://localhost:5000/api/groups')
+      .then((response) => {
+        const sortedGroups = response.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
         setGroups(sortedGroups.reverse());
@@ -33,7 +34,9 @@ const GroupsPage = () => {
         );
         setTotalBalance(balance);
       })
-      .catch((error) => console.error('Error al obtener grupos:', error));
+      .catch((error) => {
+        console.error('Error al obtener grupos:', error);
+      });
   };
 
   const createGroup = (groupName, groupColor) => {
@@ -42,41 +45,44 @@ const GroupsPage = () => {
       return;
     }
 
-    fetch('http://localhost:5000/api/groups', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    axios
+      .post('http://localhost:5000/api/groups', {
         name: groupName,
         color: groupColor,
         description: 'Descripción del nuevo grupo',
         value: 0,
-      }),
-    })
-      .then((response) => response.json())
-      .then(() => {
+      })
+      .then((res) => {
         getGroups();
         navigate('/groups');
       })
-      .catch((error) => console.error('Error al crear grupo:', error));
+      .catch((error) => {
+        console.error('Error al crear grupo:', error);
+      });
   };
 
   const deleteGroup = (id) => {
-    alert('¿Estás seguro de que quieres eliminar este grupo?');
+    const confirmDelete = window.confirm(
+      '¿Estás seguro de que quieres eliminar este grupo?'
+    );
+    if (!confirmDelete) {
+      return;
+    }
 
-    fetch(`http://localhost:5000/api/groups/${id}`, {
-      method: 'DELETE',
-    })
+    axios
+      .delete(`http://localhost:5000/api/groups/${id}`)
       .then((response) => {
-        if (response.ok) {
+        if (response.status === 200) {
           getGroups();
         } else {
           console.error('Error al eliminar el grupo');
         }
       })
-      .catch((error) => console.error('Error al eliminar el grupo:', error));
+      .catch((error) => {
+        console.error('Error al eliminar el grupo:', error);
+      });
   };
+
   const viewGroup = (groupId) => {
     navigate(`/groups/${groupId}`);
   };

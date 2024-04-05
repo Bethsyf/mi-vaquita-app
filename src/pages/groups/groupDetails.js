@@ -4,21 +4,26 @@ import FooterView from '../../components/views/FooterView';
 import ButtonControl from '../../components/controls/ButtonControl';
 import CardView from '../../components/views/CardView';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const GroupDetailsPage = () => {
   const [expenses, setExpenses] = useState([]);
   const [group, setGroup] = useState(null);
   const { id } = useParams();
 
-  useEffect(() => {
-    fetch(`http://localhost:5000/api/groups/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setGroup(data);
+  const getGroup = () => {
+    axios
+      .get(`http://localhost:5000/api/groups/${id}`)
+      .then((response) => {
+        setGroup(response.data);
       })
-      .catch((error) =>
-        console.error('Error al obtener los detalles del grupo:', error)
-      );
+      .catch((error) => {
+        console.error('Error al obtener los detalles del grupo:', error);
+      });
+  };
+
+  useEffect(() => {
+    getGroup();
   }, [id]);
 
   const handleExitGroup = () => {};
