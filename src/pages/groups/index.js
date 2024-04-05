@@ -124,7 +124,7 @@ const GroupsPage = () => {
           {totalBalanceText}
         </p>
       </div>
-      <div className="flex justify-center items-center flex-wrap">
+      <div className="flex justify-center items-center flex-wrap ">
         {groups.map((group) => (
           <CardView
             key={group.id}
@@ -134,6 +134,8 @@ const GroupsPage = () => {
             selectedColor={group.color}
             onView={() => viewGroup(group.id)}
             onDelete={() => deleteGroup(group.id)}
+            onExit={false}
+            styles={'shadow-lg'}
           />
         ))}
       </div>

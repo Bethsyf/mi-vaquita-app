@@ -1,5 +1,6 @@
 import React from 'react';
 import ButtonControl from '../controls/ButtonControl';
+import logo from '../../assets/logo.svg';
 
 const CardView = ({
   groupName,
@@ -8,7 +9,11 @@ const CardView = ({
   selectedColor,
   onView,
   onDelete,
+  onExit,
+  styles,
 }) => {
+  const cardStyles = `flex items-center m-2  overflow-hidden pl-2 ${styles}`;
+
   let textColor, balanceText;
   if (value < 0) {
     textColor = 'text-blue-500';
@@ -21,11 +26,11 @@ const CardView = ({
     balanceText = 'Debes: 0';
   }
   return (
-    <div className="flex items-center m-2 shadow-lg overflow-hidden pl-2">
+    <div className={cardStyles}>
       <div className="h-20 w-20 p-3" style={{ backgroundColor: selectedColor }}>
         <img
           className="h-full w-full object-cover md:w-48"
-          src="logo.svg"
+          src={logo}
           alt="Grupo"
         />
       </div>
@@ -37,16 +42,26 @@ const CardView = ({
         <p className={`font-bold ${textColor}`}>{balanceText}</p>
 
         <div className="mt-4 flex space-x-2">
-          <ButtonControl
-            text={'Editar'}
-            styles={'py-0'}
-            onClickFn={() => onView()}
-          />
-          <ButtonControl
-            text={'Eliminar'}
-            styles={'py-0'}
-            onClickFn={() => onDelete()}
-          />
+          {onExit ? (
+            <ButtonControl
+              text={'Salir del grupo'}
+              styles={'py-0'}
+              onClickFn={() => onExit()}
+            />
+          ) : (
+            <>
+              <ButtonControl
+                text={'Editar'}
+                styles={'py-0'}
+                onClickFn={() => onView()}
+              />
+              <ButtonControl
+                text={'Eliminar'}
+                styles={'py-0'}
+                onClickFn={() => onDelete()}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>
