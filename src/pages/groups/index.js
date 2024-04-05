@@ -89,23 +89,22 @@ const GroupsPage = () => {
   let totalBalanceText, totalBalanceColor, balanceLabel;
   if (totalBalance < 0) {
     totalBalanceText = `$${Math.abs(totalBalance)}`;
-    totalBalanceColor = 'text-blue-500';
+    totalBalanceColor = 'text-[#66B04C]';
     balanceLabel = 'Me deben: ';
   } else if (totalBalance >= 0) {
     totalBalanceText = `$${totalBalance}`;
-    totalBalanceColor = 'text-red-500';
+    totalBalanceColor = 'text-[#FF2530]';
     balanceLabel = 'Debes: ';
   } else {
     totalBalanceText = '$0';
-    totalBalanceColor = 'text-red-500';
+    totalBalanceColor = 'text-[#FF2530]';
     balanceLabel = 'Debes: ';
   }
 
   return (
     <main>
       <HeaderView />
-
-      <div className="flex justify-end mt-9">
+      <div className="flex justify-end mt-9 md:mr-20">
         <ButtonControl
           text={'Nuevo Grupo'}
           styles={'mr-2'}
@@ -118,9 +117,12 @@ const GroupsPage = () => {
           />
         )}
       </div>
-      <div className="ml-3 mb-8">
-        <p className="font-bold text-sm">{balanceLabel}</p>
-        <p className={`font-bold text-xl ${totalBalanceColor}`}>
+      <div className="ml-3 mb-8 md:ml-20">
+        <p className="hidden font-bold text-[#36190D] md:flex md:text-3xl">
+          GRUPOS
+        </p>
+        <p className="font-bold text-sm md:text-lg md:mt-4">{balanceLabel}</p>
+        <p className={`font-bold text-xl md:text-2xl ${totalBalanceColor}`}>
           {totalBalanceText}
         </p>
       </div>

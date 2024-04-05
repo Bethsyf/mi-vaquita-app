@@ -32,15 +32,15 @@ const GroupDetailsPage = () => {
         <div className="mx-auto my-4 flex justify-center">
           <ButtonControl
             text={'Nuevo Gasto'}
-            styles={'text-xs font-bold px-2 mx-1'}
+            styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
           />
           <ButtonControl
             text={'Nuevo Amigo'}
-            styles={'text-xs font-bold px-2 mx-1'}
+            styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
           />
           <ButtonControl
             text={'Editar Grupo'}
-            styles={'text-xs font-bold px-2 mx-1'}
+            styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
           />
         </div>
         {group && (
@@ -50,7 +50,7 @@ const GroupDetailsPage = () => {
             onExit={handleExitGroup}
           />
         )}
-        <h2 className="font-bold text-[#FFA72F] border-b border-gray-300 pb-2 mb-2 mt-8 mx-3">
+        <h2 className="font-bold text-[#FFA72F] border-b border-gray-300 pb-2 mb-2 mt-8 mx-3 md:text-2xl">
           GASTOS
         </h2>
         <div className="flex justify-center items-center flex-wrap">

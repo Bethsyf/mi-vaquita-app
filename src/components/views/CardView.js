@@ -12,7 +12,7 @@ const CardView = ({
   onExit,
   styles,
 }) => {
-  const cardStyles = `flex items-center m-2  overflow-hidden pl-2 ${styles}`;
+  const cardStyles = `flex items-center m-2  overflow-hidden pl-2 md:m-6 ${styles}`;
 
   let textColor, balanceText;
   if (value < 0) {
