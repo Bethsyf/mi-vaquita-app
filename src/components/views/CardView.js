@@ -4,7 +4,7 @@ import ButtonControl from '../controls/ButtonControl';
 const CardView = ({ groupName, description, value }) => {
   return (
     <div className="flex items-center m-2 shadow-lg overflow-hidden pl-2">
-      <div className="h-20 w-20 p-3 bg-[#FFA72F] md:flex-shrink-0 ">
+      <div className="h-20 w-20 p-3" style={{ backgroundColor: value }}>
         <img
           className="h-full w-full object-cover md:w-48"
           src="logo.svg"
