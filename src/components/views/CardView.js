@@ -1,10 +1,10 @@
 import React from 'react';
 import ButtonControl from '../controls/ButtonControl';
 
-const CardView = ({ groupName, description, value }) => {
+const CardView = ({ groupName, description, value, selectedColor }) => {
   return (
     <div className="flex items-center m-2 shadow-lg overflow-hidden pl-2">
-      <div className="h-20 w-20 p-3" style={{ backgroundColor: value }}>
+      <div className="h-20 w-20 p-3" style={{ backgroundColor: selectedColor }}>
         <img
           className="h-full w-full object-cover md:w-48"
           src="logo.svg"

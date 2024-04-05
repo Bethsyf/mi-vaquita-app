@@ -3,7 +3,7 @@ import ButtonControl from '../controls/ButtonControl';
 import ColorsView from './ColorsView';
 
 const CreateGroupView = ({ onClose, onCreateGroup }) => {
-  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedColor, setSelectedColor] = useState('#FFFFFF');
   const [groupName, setGroupName] = useState('');
   const [error, setError] = useState('');
 
@@ -13,7 +13,7 @@ const CreateGroupView = ({ onClose, onCreateGroup }) => {
 
   const handleCreateGroup = () => {
     if (!groupName) {
-      setError('Por favor ingrese un nombre de grupo');
+      setError('Elige un nombre para continuar');
       return;
     }
 
@@ -47,7 +47,10 @@ const CreateGroupView = ({ onClose, onCreateGroup }) => {
         />
 
         <div className="mb-4 border border-gray-400 rounded-md p-3">
-          <ColorsView onSelectColor={handleColorSelect} />
+          <ColorsView
+            onSelectColor={handleColorSelect}
+            selectedColor={selectedColor}
+          />
         </div>
         <ButtonControl
           text={'Crear'}

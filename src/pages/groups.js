@@ -34,8 +34,8 @@ const GroupsPage = () => {
       }),
     })
       .then((response) => response.json())
-      .then((newGroup) => {
-        setGroups([newGroup, ...groups]);
+      .then(() => {
+        getGroups();
         navigate('/groups');
       })
       .catch((error) => console.error('Error al crear grupo:', error));
@@ -44,7 +44,12 @@ const GroupsPage = () => {
   const getGroups = () => {
     fetch('http://localhost:5000/api/groups')
       .then((response) => response.json())
-      .then((data) => setGroups(data))
+      .then((data) => {
+        const sortedGroups = data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setGroups(sortedGroups.reverse());
+      })
       .catch((error) => console.error('Error al obtener grupos:', error));
   };
 
@@ -78,6 +83,7 @@ const GroupsPage = () => {
             groupName={group.name}
             description={group.description}
             value={group.value}
+            selectedColor={group.color}
           />
         ))}
       </div>
