@@ -6,6 +6,7 @@ const CardView = ({
   description,
   value,
   selectedColor,
+  onView,
   onDelete,
 }) => {
   let textColor, balanceText;
@@ -36,7 +37,11 @@ const CardView = ({
         <p className={`font-bold ${textColor}`}>{balanceText}</p>
 
         <div className="mt-4 flex space-x-2">
-          <ButtonControl text={'Editar'} styles={'py-0'} />
+          <ButtonControl
+            text={'Editar'}
+            styles={'py-0'}
+            onClickFn={() => onView()}
+          />
           <ButtonControl
             text={'Eliminar'}
             styles={'py-0'}

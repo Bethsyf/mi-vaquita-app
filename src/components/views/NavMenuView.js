@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import polygon from '../../assets/polygon.svg';
 
 const NavMenu = () => {
   const [selectedLink, setSelectedLink] = useState(null);
@@ -7,24 +8,25 @@ const NavMenu = () => {
 
   useEffect(() => {
     const pathname = location.pathname;
-    switch (pathname) {
-      case '/friends':
-        setSelectedLink(0);
-        break;
-      case '/expenses':
-        setSelectedLink(1);
-        break;
-      case '/groups':
-        setSelectedLink(2);
-        break;
-      default:
-        setSelectedLink(null);
+
+    if (pathname === '/') {
+      setSelectedLink(2);
+    } else {
+      switch (pathname) {
+        case '/friends':
+          setSelectedLink(0);
+          break;
+        case '/expenses':
+          setSelectedLink(1);
+          break;
+        case '/groups':
+          setSelectedLink(2);
+          break;
+        default:
+          setSelectedLink(2);
+      }
     }
   }, [location]);
-
-  const handleClick = (index) => {
-    setSelectedLink(index);
-  };
 
   return (
     <nav className="text-white py-4 px-5 w-full md:w-auto">
@@ -32,7 +34,6 @@ const NavMenu = () => {
         <li>
           <Link
             to="/friends"
-            onClick={() => handleClick(0)}
             className={`relative ${
               selectedLink === 0 ? 'active' : ''
             } md:hover:underline`}
@@ -40,7 +41,7 @@ const NavMenu = () => {
             Amigos
             {selectedLink === 0 && (
               <img
-                src="polygon.svg"
+                src={polygon}
                 alt="Selected"
                 className="absolute top-6 w-10 h-10 ml-2 md:hidden "
               />
@@ -50,7 +51,6 @@ const NavMenu = () => {
         <li>
           <Link
             to="/expenses"
-            onClick={() => handleClick(1)}
             className={`relative ${
               selectedLink === 1 ? 'active' : ''
             } md:hover:underline`}
@@ -58,7 +58,7 @@ const NavMenu = () => {
             Gastos
             {selectedLink === 1 && (
               <img
-                src="polygon.svg"
+                src={polygon}
                 alt="Selected"
                 className="absolute top-6 w-10 h-10 ml-2 md:hidden"
               />
@@ -68,7 +68,6 @@ const NavMenu = () => {
         <li>
           <Link
             to="/groups"
-            onClick={() => handleClick(2)}
             className={`relative ${
               selectedLink === 2 ? 'active' : ''
             } md:hover:underline`}
@@ -76,7 +75,7 @@ const NavMenu = () => {
             Grupos
             {selectedLink === 2 && (
               <img
-                src="polygon.svg"
+                src={polygon}
                 alt="Selected"
                 className="absolute top-6 w-10 h-10 ml-2 md:hidden"
               />

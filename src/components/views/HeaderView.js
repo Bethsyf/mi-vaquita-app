@@ -1,5 +1,6 @@
 import React from 'react';
 import NavMenu from './NavMenuView';
+import logo from '../../assets/logo.svg';
 
 const HeaderView = () => {
   return (
@@ -7,7 +8,7 @@ const HeaderView = () => {
       <div className="container mx-auto flex flex-wrap items-center justify-between py-2">
         <div className="flex items-end pl-5 md:items-center md:pl-0">
           <img
-            src="logo.svg"
+            src={logo}
             alt="Workflow"
             className="w-10 h-10 mr-2 md:w-20 md:h-20 md:mr-4"
           />

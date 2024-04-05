@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import HeaderView from '../components/views/HeaderView';
-import FooterView from '../components/views/FooterView';
-import CardView from '../components/views/CardView';
-import ButtonControl from '../components/controls/ButtonControl';
-import { useNavigate } from 'react-router-dom';
-import CreateGroupView from '../components/views/CreateGroupView';
+import HeaderView from '../../components/views/HeaderView';
+import FooterView from '../../components/views/FooterView';
+import CardView from '../../components/views/CardView';
+import ButtonControl from '../../components/controls/ButtonControl';
+import { useNavigate, useParams } from 'react-router-dom';
+import CreateGroupView from '../../components/views/CreateGroupView';
 
 const GroupsPage = () => {
   const [groups, setGroups] = useState([]);
   const [totalBalance, setTotalBalance] = useState(0);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { id } = useParams();
+  const [isGroupDetail, setIsGroupDetail] = useState(false);
 
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
@@ -24,7 +26,7 @@ const GroupsPage = () => {
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
         setGroups(sortedGroups.reverse());
-        // Calcular el saldo total
+
         const balance = sortedGroups.reduce(
           (acc, group) => acc + group.value,
           0
@@ -60,7 +62,7 @@ const GroupsPage = () => {
       .catch((error) => console.error('Error al crear grupo:', error));
   };
 
-  const handleDeleteGroup = (id) => {
+  const deleteGroup = (id) => {
     alert('¿Estás seguro de que quieres eliminar este grupo?');
 
     fetch(`http://localhost:5000/api/groups/${id}`, {
@@ -75,10 +77,14 @@ const GroupsPage = () => {
       })
       .catch((error) => console.error('Error al eliminar el grupo:', error));
   };
+  const viewGroup = (groupId) => {
+    navigate(`/groups/${groupId}`);
+  };
 
   useEffect(() => {
     getGroups();
-  }, []);
+    setIsGroupDetail(!!id);
+  }, [id]);
 
   let totalBalanceText, totalBalanceColor, balanceLabel;
   if (totalBalance < 0) {
@@ -126,7 +132,8 @@ const GroupsPage = () => {
             description={group.description}
             value={group.value}
             selectedColor={group.color}
-            onDelete={() => handleDeleteGroup(group.id)}
+            onView={() => viewGroup(group.id)}
+            onDelete={() => deleteGroup(group.id)}
           />
         ))}
       </div>

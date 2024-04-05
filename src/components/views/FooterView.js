@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../../assets/logo-wwc.png';
 
 const FooterView = () => {
   return (
     <div className="mt-6">
       <img
-        src="logo-wwc.png"
+        src={logo}
         alt="Workflow"
         className="w-20 h-25 m-auto md:hidden mb-4"
       />
