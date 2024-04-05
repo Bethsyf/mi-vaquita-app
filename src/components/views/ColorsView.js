@@ -16,7 +16,7 @@ const ColorsView = ({ onSelectColor, selectedColor }) => {
         <div
           key={index}
           className={`w-8 h-8 border border-gray-300 cursor-pointer rounded-md ${
-            selectedColor === color ? 'border-2 border-black' : ''
+            selectedColor === color ? 'border-4 border-black' : ''
           }`}
           style={{ backgroundColor: color }}
           onClick={() => onSelectColor(color)}
