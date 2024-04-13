@@ -23,16 +23,16 @@ const GroupsPage = () => {
     axios
       .get('http://localhost:5000/api/groups')
       .then((response) => {
-        const sortedGroups = response.data.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
-        setGroups(sortedGroups.reverse());
+        // const sortedGroups = response.data.sort(
+        //   (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        // );
+         setGroups(response.data);
 
-        const balance = sortedGroups.reduce(
-          (acc, group) => acc + group.value,
-          0
-        );
-        setTotalBalance(balance);
+        // const balance = sortedGroups.reduce(
+        //   (acc, group) => acc + group.value,
+        //   0
+        // );
+        // setTotalBalance(balance);
       })
       .catch((error) => {
         console.error('Error al obtener grupos:', error);

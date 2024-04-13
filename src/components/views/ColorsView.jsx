@@ -12,17 +12,24 @@ const ColorsView = ({ onSelectColor, selectedColor }) => {
     '#FF2530',
   ];
 
+
   return (
     <div className="grid grid-cols-4 gap-2">
       {colors.map((color, index) => (
         <div
           key={index}
-          className={`w-8 h-8 border border-gray-300 cursor-pointer rounded-md ${
+          className={`w-8 h-8 border border-gray-300 cursor-pointer rounded-md relative ${
             selectedColor === color ? 'border-4 border-black' : ''
           }`}
           style={{ backgroundColor: color }}
           onClick={() => onSelectColor(color)}
-        />
+        >
+          {selectedColor === color && (
+        <div
+        className={`absolute bottom-5 left-5 rounded-full w-3 h-3 bg-[#64b44c] border border-gray`}    
+      />
+          )}
+        </div>
       ))}
     </div>
   );
