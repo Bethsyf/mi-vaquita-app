@@ -13,7 +13,6 @@ const GroupsPage = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { id } = useParams();
-  const [isGroupDetail, setIsGroupDetail] = useState(false);
 
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
@@ -21,23 +20,15 @@ const GroupsPage = () => {
 
   const getGroups = () => {
     axios
-      .get('http://localhost:5000/api/groups')
+      .get('http://localhost:5000/api/v1/groups')
       .then((response) => {
-        // const sortedGroups = response.data.sort(
-        //   (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        // );
-         setGroups(response.data);
-
-        // const balance = sortedGroups.reduce(
-        //   (acc, group) => acc + group.value,
-        //   0
-        // );
-        // setTotalBalance(balance);
+        setGroups(response.data);
       })
       .catch((error) => {
         console.error('Error al obtener grupos:', error);
       });
   };
+ 
 
   const createGroup = (groupName, groupColor) => {
     if (!groupName) {
@@ -46,7 +37,7 @@ const GroupsPage = () => {
     }
 
     axios
-      .post('http://localhost:5000/api/groups', {
+      .post('http://localhost:5000/api/V1/groups', {
         name: groupName,
         color: groupColor,
         description: 'Descripción del nuevo grupo',
@@ -70,7 +61,7 @@ const GroupsPage = () => {
     }
 
     axios
-      .delete(`http://localhost:5000/api/groups/${id}`)
+      .delete(`http://localhost:5000/api/v1/groups/${id}`)
       .then((response) => {
         if (response.status === 200) {
           getGroups();
@@ -88,9 +79,8 @@ const GroupsPage = () => {
   };
 
   useEffect(() => {
-    getGroups();
-    setIsGroupDetail(!!id);
-  }, [id]);
+    getGroups();    
+  }, []);
 
   let totalBalanceText, totalBalanceColor, balanceLabel;
   if (totalBalance < 0) {

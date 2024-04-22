@@ -3,6 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    font-family: 'Fredoka';
+html, * {
+   font-family: 'Fredoka';
   }

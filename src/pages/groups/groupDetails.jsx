@@ -13,9 +13,9 @@ const GroupDetailsPage = () => {
 
   const getGroup = () => {
     axios
-      .get(`http://localhost:5000/api/groups/${id}`)
+      .get(`http://localhost:5000/api/v1/groups/${id}`)
       .then((response) => {
-        setGroup(response.data);
+           setGroup(response.data);
       })
       .catch((error) => {
         console.error('Error al obtener los detalles del grupo:', error);
@@ -33,7 +33,7 @@ const GroupDetailsPage = () => {
   return (
     <main>
       <HeaderView />
-      <div className="font-fredoka">
+        <div className="font-fredoka">
         <div className="mx-auto my-4 flex justify-center">
           <ButtonControl
             text={'Nuevo Gasto'}
