@@ -4,9 +4,11 @@ import GroupsPage from './pages/groups';
 import FriendsPage from './pages/friends';
 import ExpensesPage from './pages/expenses';
 import GroupDetailsPage from './pages/groups/groupDetails';
+import Login from './pages/login';
 
 const routes = [
   { path: '/', element: <GroupsPage /> },
+  { path: '/login', element: <Login /> },
   { path: '/friends', element: <FriendsPage /> },
   { path: '/expenses', element: <ExpensesPage /> },
   { path: '/groups', element: <GroupsPage /> },
