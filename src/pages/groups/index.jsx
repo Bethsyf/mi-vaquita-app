@@ -22,7 +22,7 @@ const GroupsPage = () => {
     axios
       .get('http://localhost:5000/api/v1/groups')
       .then((response) => {
-        setGroups(response.data);
+        setGroups(response.data.groups);        
       })
       .catch((error) => {
         console.error('Error al obtener grupos:', error);
