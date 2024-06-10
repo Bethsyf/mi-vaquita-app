@@ -4,17 +4,25 @@ import GroupsPage from './pages/groups';
 import FriendsPage from './pages/friends';
 import ExpensesPage from './pages/expenses';
 import GroupDetailsPage from './pages/groups/groupDetails';
-import Login from './pages/login';
+import Login from './pages/auth/login';
+import Register from './pages/auth/signup';
+import ProtectedRoute from './components/auth/ProtectedRoute'; 
 
 const routes = [
-  { path: '/', element: <GroupsPage /> },
-  { path: '/login', element: <Login /> },
-  { path: '/friends', element: <FriendsPage /> },
-  { path: '/expenses', element: <ExpensesPage /> },
-  { path: '/groups', element: <GroupsPage /> },
-  { path: '/groups/:id', element: <GroupDetailsPage /> },
+  // Rutas protegidas
+  { path: '/', element: <ProtectedRoute><GroupsPage /></ProtectedRoute> },
+  { path: '/friends', element: <ProtectedRoute><FriendsPage /></ProtectedRoute> },
+  { path: '/expenses', element: <ProtectedRoute><ExpensesPage /></ProtectedRoute> },
+  { path: '/groups', element: <ProtectedRoute><GroupsPage /></ProtectedRoute> },
+  { path: '/groups/:id', element: <ProtectedRoute><GroupDetailsPage /></ProtectedRoute> },
+
+  // Rutas públicas
+  { path: '/auth/login', element: <Login /> },
+  { path: '/auth/signup', element: <Register /> },
 ];
+
 const router = createBrowserRouter(routes);
+
 function App() {
   return <RouterProvider router={router} />;
 }

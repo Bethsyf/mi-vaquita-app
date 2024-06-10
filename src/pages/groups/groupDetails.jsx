@@ -11,20 +11,24 @@ const GroupDetailsPage = () => {
   const [group, setGroup] = useState(null);
   const { id } = useParams();
 
-  const getGroup = () => {
-    axios
-      .get(`http://localhost:5000/api/v1/groups/${id}`)
-      .then((response) => {
-           setGroup(response.data);
-      })
-      .catch((error) => {
-        console.error('Error al obtener los detalles del grupo:', error);
+  const getGroup = async () => {
+    try {
+      const token = sessionStorage.getItem('token');
+      const response = await axios.get(`http://localhost:5000/api/v1/groups/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
+      setGroup(response.data);
+    } catch (error) {
+      console.error('Error al obtener los detalles del grupo:', error);
+    }
   };
+  
 
   useEffect(() => {
     getGroup();
-  }, []);
+  }, [id]);
 
   const handleExitGroup = () => {};
   const deleteExpense = () => {};
@@ -33,7 +37,7 @@ const GroupDetailsPage = () => {
   return (
     <main>
       <HeaderView />
-        <div className="font-fredoka">
+      <div className="font-fredoka">
         <div className="mx-auto my-4 flex justify-center">
           <ButtonControl
             text={'Nuevo Gasto'}
@@ -50,8 +54,8 @@ const GroupDetailsPage = () => {
         </div>
         {group && (
           <CardView
-            groupName={group?.name}
-            selectedColor={group?.color}
+            groupName={group.name}
+            selectedColor={group.color}
             onExit={handleExitGroup}
           />
         )}
@@ -78,4 +82,5 @@ const GroupDetailsPage = () => {
     </main>
   );
 };
+
 export default GroupDetailsPage;

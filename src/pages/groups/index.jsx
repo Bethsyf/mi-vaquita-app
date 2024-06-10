@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import HeaderView from '../../components/views/HeaderView';
 import FooterView from '../../components/views/FooterView';
 import CardView from '../../components/views/CardView';
@@ -18,68 +18,89 @@ const GroupsPage = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const getGroups = () => {
-    axios
-      .get('http://localhost:5000/api/v1/groups')
-      .then((response) => {
-        setGroups(response.data.groups);        
-      })
-      .catch((error) => {
-        console.error('Error al obtener grupos:', error);
+  const getGroups = async () => {
+    try {
+      const token = sessionStorage.getItem('token');
+      if (!token) {          
+        navigate('/auth/login');
+        return;
+      }
+
+      const response = await axios.get('http://localhost:5000/api/v1/groups', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
-  };
- 
 
-  const createGroup = (groupName, groupColor) => {
-    if (!groupName) {
-      alert('Por favor ingrese un nombre de grupo');
-      return;
+      setGroups(response.data.groups);
+    } catch (error) {
+      console.error('Error al obtener grupos:', error);
     }
+  };
 
-    axios
-      .post('http://localhost:5000/api/V1/groups', {
+  const createGroup = async (groupName, groupColor) => {
+    try {
+      const token = sessionStorage.getItem('token');
+      if (!token) {          
+        navigate('/auth/login');
+        return;
+      }
+  
+      const response = await axios.post('http://localhost:5000/api/V1/groups', {
         name: groupName,
-        color: groupColor,
-        description: 'Descripción del nuevo grupo',
-        value: 0,
-      })
-      .then((res) => {
-        getGroups();
-        navigate('/groups');
-      })
-      .catch((error) => {
-        console.error('Error al crear grupo:', error);
+        color: groupColor,        
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
-  };
-
-  const deleteGroup = (id) => {
-    const confirmDelete = window.confirm(
-      '¿Estás seguro de que quieres eliminar este grupo?'
-    );
-    if (!confirmDelete) {
-      return;
+  
+      getGroups();
+      navigate('/groups');
+    } catch (error) {
+      console.error('Error al crear grupo:', error);
     }
+  };
+  
 
-    axios
-      .delete(`http://localhost:5000/api/v1/groups/${id}`)
-      .then((response) => {
+  const deleteGroup = async (id) => {
+    try {
+   
+      const confirmDelete = window.confirm(
+        '¿Estás seguro de que quieres eliminar este grupo?'
+      );
+  
+      if (confirmDelete) {
+        const token = sessionStorage.getItem('token');
+        if (!token) {          
+          navigate('/auth/login');
+          return;
+        }
+  
+        const response = await axios.delete(`http://localhost:5000/api/v1/groups/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+  
         if (response.status === 200) {
           getGroups();
         } else {
           console.error('Error al eliminar el grupo');
         }
-      })
-      .catch((error) => {
-        console.error('Error al eliminar el grupo:', error);
-      });
+      }
+    } catch (error) {
+      console.error('Error al eliminar el grupo:', error);
+    }
   };
+  
 
   const viewGroup = (groupId) => {
     navigate(`/groups/${groupId}`);
   };
 
   useEffect(() => {
-    getGroups();    
+    getGroups();
   }, []);
 
   let totalBalanceText, totalBalanceColor, balanceLabel;
