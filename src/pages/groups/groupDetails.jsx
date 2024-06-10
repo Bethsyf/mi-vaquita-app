@@ -31,13 +31,13 @@ const GroupDetailsPage = () => {
 
   const deleteGroup = async (id) => {
     Swal.fire({
-      title: 'Confirmar eliminación',
-      text: '¿Estás seguro de que quieres eliminar este grupo?',
-      icon: 'warning',
+      title: 'Eliminar grupo',
+      text: '¿Está seguro de que desea borrar el grupo? Toda la información se perderá',     
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'No, cancelar',
-      confirmButtonColor: '#FF2530'
+      confirmButtonColor: '#36190D',
+      cancelButtonColor: '#36190D'
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {

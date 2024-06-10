@@ -9,8 +9,6 @@ import CardView from '../../components/views/CardView';
 import ButtonControl from '../../components/controls/ButtonControl';
 import CreateGroupView from '../../components/views/CreateGroupView';
 
-
-
 const GroupsPage = () => {
   const [groups, setGroups] = useState([]);
   const [totalBalance, setTotalBalance] = useState(0);
@@ -37,7 +35,6 @@ const GroupsPage = () => {
       });
 
       setGroups(response.data.groups);
-   
     } catch (error) {
       console.error('Error al obtener grupos:', error);
       Swal.fire({
@@ -60,10 +57,12 @@ const GroupsPage = () => {
         return;
       }
   
+      const upperCaseGroupName = groupName.toUpperCase(); 
+  
       const response = await axios.post(
         'http://localhost:5000/api/v1/groups',
         {
-          name: groupName,
+          name: upperCaseGroupName, 
           color: groupColor,
         },
         {
@@ -74,8 +73,6 @@ const GroupsPage = () => {
       );
   
       if (response.status === 201) {
-        getGroups();
-        navigate('/groups');
         Swal.fire({
           toast: true,
           position: 'top-end',
@@ -84,35 +81,46 @@ const GroupsPage = () => {
           showConfirmButton: false,
           timer: 3000,
           timerProgressBar: true,
-        });
+        })
+        getGroups()
       } else {
-        console.error('Error al crear grupo:', response.data.error);
         Swal.fire({
           toast: true,
           position: 'top-end',
           icon: 'error',
-          title: 'Error al crear grupo: ' + response.data.error,
+          title: 'Error al crear grupo',
           showConfirmButton: false,
           timer: 3000,
           timerProgressBar: true,
         });
       }
     } catch (error) {
-      console.error('Error al crear grupo:', error);
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'error',
-        title: 'Error al crear grupo',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
+      if (
+        error.response &&
+        error.response.status === 500 &&
+        error.response.data.error.includes(
+          'Group with the same name already exists'
+        )
+      ) {
+        Swal.fire({        
+          icon: 'error',               
+          title: 'El nombre de grupo ya existe, intenta con otro nombre',    
+          showConfirmButton: true,  
+          confirmButtonColor: '#4c84a4'  
+        });
+      } else {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Error al crear grupo',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      }
     }
   };
-  
-  
-
   
 
   const viewGroup = (groupId) => {
@@ -166,17 +174,17 @@ const GroupsPage = () => {
       </div>
       <div className="flex justify-center items-center flex-wrap">
         {groups.map((group) => (
-     <CardView
-     key={group.id}
-     groupName={group.name}
-     description={group.description}
-     value={group.value}
-     selectedColor={group.color}
-     onView={() => viewGroup(group.id)}
-     onDelete={() => ''} 
-     onExit={false}
-     styles={'shadow-lg'}
-   />
+          <CardView
+            key={group.id}
+            groupName={group.name}
+            description={group.description}
+            value={group.value}
+            selectedColor={group.color}
+            onView={() => viewGroup(group.id)}
+            onDelete={() => ''}
+            onExit={false}
+            styles={'shadow-lg'}
+          />
         ))}
       </div>
       <FooterView />
