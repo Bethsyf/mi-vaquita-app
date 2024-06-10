@@ -16,6 +16,7 @@ const ColorsView = ({ onSelectColor, selectedColor }) => {
     <div className="grid grid-cols-4 gap-2">
       {colors.map((color, index) => (
         <button
+        type='button'
           key={index+1}
           className={`w-8 h-8 border border-gray-300 cursor-pointer rounded-md ${
             selectedColor === color ? 'border-4 border border-green-400' : ''

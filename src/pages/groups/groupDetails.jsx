@@ -40,14 +40,17 @@ const GroupDetailsPage = () => {
       <div className="font-fredoka">
         <div className="mx-auto my-4 flex justify-center">
           <ButtonControl
+            type="button"
             text={'Nuevo Gasto'}
             styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
           />
           <ButtonControl
+            type="button"
             text={'Nuevo Amigo'}
             styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
           />
           <ButtonControl
+            type="button"
             text={'Editar Grupo'}
             styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
           />

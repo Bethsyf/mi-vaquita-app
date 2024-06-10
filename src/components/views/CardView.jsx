@@ -44,6 +44,7 @@ const CardView = ({
         <div className="mt-4 flex space-x-2">
           {onExit ? (
             <ButtonControl
+            type="button"
               text={'Salir del grupo'}
               styles={'py-0'}
               onClickFn={() => onExit()}
@@ -51,11 +52,13 @@ const CardView = ({
           ) : (
             <>
               <ButtonControl
+                type="button"
                 text={'Editar'}
                 styles={'py-0'}
                 onClickFn={() => onView()}
               />
               <ButtonControl
+                type="button"
                 text={'Eliminar'}
                 styles={'py-0'}
                 onClickFn={() => onDelete()}

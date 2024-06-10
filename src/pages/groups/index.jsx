@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import 'sweetalert2/src/sweetalert2.scss';
 import HeaderView from '../../components/views/HeaderView';
 import FooterView from '../../components/views/FooterView';
 import CardView from '../../components/views/CardView';
 import ButtonControl from '../../components/controls/ButtonControl';
-import { useNavigate, useParams } from 'react-router-dom';
 import CreateGroupView from '../../components/views/CreateGroupView';
-import axios from 'axios';
+
+
 
 const GroupsPage = () => {
   const [groups, setGroups] = useState([]);
   const [totalBalance, setTotalBalance] = useState(0);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { id } = useParams();
 
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
@@ -21,79 +24,164 @@ const GroupsPage = () => {
   const getGroups = async () => {
     try {
       const token = sessionStorage.getItem('token');
-      if (!token) {          
+      if (!token) {
         navigate('/auth/login');
         return;
       }
 
       const response = await axios.get('http://localhost:5000/api/v1/groups', {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       setGroups(response.data.groups);
+   
     } catch (error) {
       console.error('Error al obtener grupos:', error);
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'error',
+        title: 'Error al obtener grupos',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
     }
   };
 
   const createGroup = async (groupName, groupColor) => {
     try {
       const token = sessionStorage.getItem('token');
-      if (!token) {          
+      if (!token) {
         navigate('/auth/login');
         return;
       }
-  
-      const response = await axios.post('http://localhost:5000/api/V1/groups', {
-        name: groupName,
-        color: groupColor,        
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
+
+      await axios.post(
+        'http://localhost:5000/api/v1/groups',
+        {
+          name: groupName,
+          color: groupColor,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
-  
+      );
+
       getGroups();
       navigate('/groups');
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Grupo creado exitosamente',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
     } catch (error) {
-      console.error('Error al crear grupo:', error);
+      if (error.response && error.response.data && error.response.data.error) {
+        const errorMessage = error.response.data.error;
+        if (errorMessage.includes('Group with the same name already exists')) {
+          Swal.fire({
+            title: 'El nombre del grupo ya existe, intenta con otro nombre',
+            icon: 'error',
+            confirmButtonText: 'OK',
+           confirmButtonColor: '#4c84a4'
+          })} else {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: 'Error al crear grupo: ' + errorMessage,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          });
+        }
+      } else {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Error al crear grupo',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      }
     }
   };
-  
 
   const deleteGroup = async (id) => {
-    try {
-   
-      const confirmDelete = window.confirm(
-        '¿Estás seguro de que quieres eliminar este grupo?'
-      );
-  
-      if (confirmDelete) {
-        const token = sessionStorage.getItem('token');
-        if (!token) {          
-          navigate('/auth/login');
-          return;
-        }
-  
-        const response = await axios.delete(`http://localhost:5000/api/v1/groups/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
+    Swal.fire({
+      title: 'Confirmar eliminación',
+      text: '¿Estás seguro de que quieres eliminar este grupo?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'No, cancelar',
+      confirmButtonColor: '#FF2530'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const token = sessionStorage.getItem('token');
+          if (!token) {
+            navigate('/auth/login');
+            return;
           }
-        });
-  
-        if (response.status === 200) {
-          getGroups();
-        } else {
-          console.error('Error al eliminar el grupo');
+
+          const response = await axios.delete(
+            `http://localhost:5000/api/v1/groups/${id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.status === 200) {
+            getGroups();
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: 'success',
+              title: 'Grupo eliminado exitosamente',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+            });
+          } else {
+            console.error('Error al eliminar el grupo');
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: 'error',
+              title: 'Error al eliminar el grupo',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+            });
+          }
+        } catch (error) {
+          console.error('Error al eliminar el grupo:', error);
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: 'Error al eliminar el grupo',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          });
         }
       }
-    } catch (error) {
-      console.error('Error al eliminar el grupo:', error);
-    }
+    });
   };
-  
 
   const viewGroup = (groupId) => {
     navigate(`/groups/${groupId}`);
@@ -121,8 +209,9 @@ const GroupsPage = () => {
   return (
     <main>
       <HeaderView />
-      <div className="flex  justify-end mt-9 md:mr-20 ">
+      <div className="flex justify-end mt-9 md:mr-20">
         <ButtonControl
+          type="button"
           text={'Nuevo Grupo'}
           styles={'mr-2'}
           onClickFn={handleModalToggle}
@@ -143,7 +232,7 @@ const GroupsPage = () => {
           {totalBalanceText}
         </p>
       </div>
-      <div className="flex justify-center items-center flex-wrap ">
+      <div className="flex justify-center items-center flex-wrap">
         {groups.map((group) => (
           <CardView
             key={group.id}
