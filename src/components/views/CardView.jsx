@@ -45,7 +45,7 @@ const CardView = ({
           {onExit ? (
             <ButtonControl
             type="button"
-              text={'Salir del grupo'}
+            text={'Eliminar'}
               styles={'py-0'}
               onClickFn={() => onExit()}
             />
@@ -53,13 +53,14 @@ const CardView = ({
             <>
               <ButtonControl
                 type="button"
-                text={'Editar'}
+                text={'Ver'}
                 styles={'py-0'}
                 onClickFn={() => onView()}
               />
               <ButtonControl
                 type="button"
-                text={'Eliminar'}
+                
+                text={'Abandonar'}
                 styles={'py-0'}
                 onClickFn={() => onDelete()}
               />

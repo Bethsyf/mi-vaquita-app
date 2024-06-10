@@ -16,6 +16,7 @@ const GroupsPage = () => {
   const [totalBalance, setTotalBalance] = useState(0);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const userId = sessionStorage.getItem('userId');
 
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
@@ -58,8 +59,8 @@ const GroupsPage = () => {
         navigate('/auth/login');
         return;
       }
-
-      await axios.post(
+  
+      const response = await axios.post(
         'http://localhost:5000/api/v1/groups',
         {
           name: groupName,
@@ -71,117 +72,48 @@ const GroupsPage = () => {
           },
         }
       );
-
-      getGroups();
-      navigate('/groups');
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'success',
-        title: 'Grupo creado exitosamente',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
-    } catch (error) {
-      if (error.response && error.response.data && error.response.data.error) {
-        const errorMessage = error.response.data.error;
-        if (errorMessage.includes('Group with the same name already exists')) {
-          Swal.fire({
-            title: 'El nombre del grupo ya existe, intenta con otro nombre',
-            icon: 'error',
-            confirmButtonText: 'OK',
-           confirmButtonColor: '#4c84a4'
-          })} else {
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'error',
-            title: 'Error al crear grupo: ' + errorMessage,
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-          });
-        }
+  
+      if (response.status === 201) {
+        getGroups();
+        navigate('/groups');
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'Grupo creado exitosamente',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
       } else {
+        console.error('Error al crear grupo:', response.data.error);
         Swal.fire({
           toast: true,
           position: 'top-end',
           icon: 'error',
-          title: 'Error al crear grupo',
+          title: 'Error al crear grupo: ' + response.data.error,
           showConfirmButton: false,
           timer: 3000,
           timerProgressBar: true,
         });
       }
+    } catch (error) {
+      console.error('Error al crear grupo:', error);
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'error',
+        title: 'Error al crear grupo',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
     }
   };
+  
+  
 
-  const deleteGroup = async (id) => {
-    Swal.fire({
-      title: 'Confirmar eliminación',
-      text: '¿Estás seguro de que quieres eliminar este grupo?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'No, cancelar',
-      confirmButtonColor: '#FF2530'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const token = sessionStorage.getItem('token');
-          if (!token) {
-            navigate('/auth/login');
-            return;
-          }
-
-          const response = await axios.delete(
-            `http://localhost:5000/api/v1/groups/${id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-
-          if (response.status === 200) {
-            getGroups();
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              icon: 'success',
-              title: 'Grupo eliminado exitosamente',
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-            });
-          } else {
-            console.error('Error al eliminar el grupo');
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              icon: 'error',
-              title: 'Error al eliminar el grupo',
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-            });
-          }
-        } catch (error) {
-          console.error('Error al eliminar el grupo:', error);
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'error',
-            title: 'Error al eliminar el grupo',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-          });
-        }
-      }
-    });
-  };
+  
 
   const viewGroup = (groupId) => {
     navigate(`/groups/${groupId}`);
@@ -234,17 +166,17 @@ const GroupsPage = () => {
       </div>
       <div className="flex justify-center items-center flex-wrap">
         {groups.map((group) => (
-          <CardView
-            key={group.id}
-            groupName={group.name}
-            description={group.description}
-            value={group.value}
-            selectedColor={group.color}
-            onView={() => viewGroup(group.id)}
-            onDelete={() => deleteGroup(group.id)}
-            onExit={false}
-            styles={'shadow-lg'}
-          />
+     <CardView
+     key={group.id}
+     groupName={group.name}
+     description={group.description}
+     value={group.value}
+     selectedColor={group.color}
+     onView={() => viewGroup(group.id)}
+     onDelete={() => ''} 
+     onExit={false}
+     styles={'shadow-lg'}
+   />
         ))}
       </div>
       <FooterView />
