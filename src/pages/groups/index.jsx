@@ -28,7 +28,7 @@ const GroupsPage = () => {
         return;
       }
 
-      const response = await axios.get('http://localhost:5000/api/v1/groups', {
+      const response = await axios.get(`http://localhost:5000/api/v1/groups`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -127,6 +127,8 @@ const GroupsPage = () => {
     navigate(`/groups/${groupId}`);
   };
 
+    const exitGroup = ({id}) => {console.log('aqui logica para salir de grupo', id)};
+
   useEffect(() => {
     getGroups();
   }, []);
@@ -145,6 +147,9 @@ const GroupsPage = () => {
     totalBalanceColor = 'text-[#FF2530]';
     balanceLabel = 'Debes: ';
   }
+
+
+
 
   return (
     <main>
@@ -180,14 +185,14 @@ const GroupsPage = () => {
             description={group.description}
             value={group.value}
             selectedColor={group.color}
-            onView={() => viewGroup(group.id)}
-            onDelete={() => ''}
-            onExit={false}
+            onView={() => viewGroup(group.id)}           
+            onExit={() => exitGroup(group.id)}
             styles={'shadow-lg'}
           />
         ))}
       </div>
       <FooterView />
+
     </main>
   );
 };

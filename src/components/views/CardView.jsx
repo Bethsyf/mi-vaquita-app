@@ -9,7 +9,7 @@ const CardView = ({
   selectedColor,
   onView,
   onDelete,
-  onExit,
+  onExit,  
   styles,
 }) => {
   const cardStyles = `flex items-center m-2  overflow-hidden pl-2 md:m-6 ${styles}`;
@@ -41,30 +41,33 @@ const CardView = ({
 
         <p className={`font-bold ${textColor}`}>{balanceText}</p>
 
-        <div className="mt-4 flex space-x-2">
+        <div className="flex space-x-2">
           {onExit ? (
-            <ButtonControl
-            type="button"
-            text={'Eliminar'}
-              styles={'py-0'}
-              onClickFn={() => onExit()}
-            />
-          ) : (
             <>
+              {' '}
               <ButtonControl
                 type="button"
                 text={'Ver'}
-                styles={'py-0'}
+                styles={'py-0 mt-2'}
                 onClickFn={() => onView()}
               />
               <ButtonControl
                 type="button"
-                
                 text={'Abandonar'}
-                styles={'py-0'}
-                onClickFn={() => onDelete()}
+                styles={'py-0 mt-2'}
+                onClickFn={() => onExit()}
               />
             </>
+          ) : (
+            <div>
+            <p className='font-bold'>Participantes: 0</p>
+              <ButtonControl
+                type="button"
+                text={'Eliminar grupo'}
+                styles={'py-0 mt-2'}
+                onClickFn={() => onDelete()}
+              />
+            </div>
           )}
         </div>
       </div>
@@ -79,8 +82,8 @@ CardView.propTypes = {
   selectedColor: PropTypes.string,
   onView: PropTypes.func,
   onDelete: PropTypes.func,
-  onExit: PropTypes.bool,
-  styles: PropTypes.string  
+  onExit: PropTypes.func,
+  styles: PropTypes.string,
 };
 
 export default CardView;

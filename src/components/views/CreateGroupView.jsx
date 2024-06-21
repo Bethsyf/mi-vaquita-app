@@ -5,13 +5,11 @@ import ButtonControl from '../controls/ButtonControl';
 import ColorsView from './ColorsView';
 import PropTypes from 'prop-types';
 
-const CreateGroupView = ({ onClose, onCreateGroup }) => {
+const CreateGroupView = ({ onClose, onCreateGroup, onEditGroup, groupToEdit }) => {
   const [selectedColor, setSelectedColor] = useState('#FFFFFF');
   const modalRef = useRef(null);
 
-  const initialValues = {
-    groupName: '',
-  };
+  const initialValues = groupToEdit ? { groupName: groupToEdit.name, color: groupToEdit.color } : {};
 
   const validationSchema = Yup.object().shape({
     groupName: Yup.string()
@@ -26,10 +24,14 @@ const CreateGroupView = ({ onClose, onCreateGroup }) => {
 
   const handleFormSubmit = async (values, { setSubmitting }) => {
     try {
-      await onCreateGroup(values.groupName, selectedColor);
+      if (groupToEdit) {
+        await onEditGroup(groupToEdit.id, values.groupName, selectedColor); 
+      } else {
+        await onCreateGroup(values.groupName, selectedColor);
+      }
       onClose();
     } catch (error) {
-      console.error('Error al crear el grupo:', error);
+      console.error('Error:', error);
     } finally {
       setSubmitting(false);
     }
@@ -83,6 +85,8 @@ const CreateGroupView = ({ onClose, onCreateGroup }) => {
 CreateGroupView.propTypes = {
   onClose: PropTypes.func,
   onCreateGroup: PropTypes.func,
+  onEditGroup: PropTypes.func,
+  groupToEdit: PropTypes.object,
 };
 
 export default CreateGroupView;
