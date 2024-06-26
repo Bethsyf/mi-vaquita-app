@@ -4,7 +4,9 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import { useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { TiKeyOutline } from 'react-icons/ti';
+import { GiPadlock } from 'react-icons/gi';
+import { LuUser } from 'react-icons/lu';
 import logo from '../../assets/logo.svg';
 import FooterView from '../../components/views/FooterView';
 
@@ -66,16 +68,12 @@ const Login = () => {
   return (
     <div className="flex flex-col m-3 items-center min-h-screen">
       <div className="text-center flex justify-center flex-col items-center">
-        <img
-          className="h-auto w-48 object-cover"
-          src={logo}
-          alt="Grupo"          
-        />
+        <img className="h-auto w-48 object-cover" src={logo} alt="logo" />
         <h1 className="text-5xl font-bold text-[#36190D]">Mi vaquita</h1>
         <h1 className="font-bold text-[#FFA72F]">
           Compartir gastos con tus amigos
         </h1>
-        <h1 className="text-xl  mt-6 font-bold text-[#36190D]">
+        <h1 className="text-xl mt-4 font-bold text-[#36190D]">
           Iniciar Sesión
         </h1>
       </div>
@@ -88,49 +86,54 @@ const Login = () => {
           setSubmitting(false);
         }}
       >
-        <Form className="mt-16 w-full max-w-sm h-full">
-          <div className="mb-8">
+        <Form className="mt-10 w-full max-w-sm h-full flex flex-col items-center">
+          <div className="mb-8 w-72 md:w-96 relative">
             <Field
               placeholder="Correo electrónico"
               type="email"
               id="email"
               name="email"
-              className="form-input w-full mb-2 border rounded-md shadow-sm h-10 pl-4 pr-4"
+              className="w-full mt-1 border rounded-md shadow-sm h-10 px-4"
             />
-            <div className="text-red-500 text-sm">
-              <ErrorMessage name="email" />
-            </div>
+            <LuUser className="text-2xl absolute inset-y-0 right-3 top-3" />
+            <ErrorMessage
+              name="email"
+              component="div"
+              className="text-red-500 text-sm absolute pl-2 bottom-[-1.5rem]"             
+            />
           </div>
 
-          <div className="mb-8 relative">
+          <div className="mb-6 relative w-72 md:w-96">
             <Field
               placeholder="Contraseña"
               type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
-              className="w-full mt-1 border rounded-md shadow-sm h-10 pr-10 pl-4 pr-4"
+              className="w-full mt-1 border rounded-md shadow-sm h-10 px-4"
             />
-            <span className=" absolute inset-y-0 right-0 pr-3 pt-6 flex items-center text-sm leading-5">
+            <span className=" absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="focus:outline-none"
               >
                 {showPassword ? (
-                  <FaEye className="text-2xl" />
+                  <TiKeyOutline className="text-2xl" />
                 ) : (
-                  <FaEyeSlash className="text-2xl" />
+                  <GiPadlock className="text-2xl" />
                 )}
               </button>
             </span>
-            <div className="text-red-500 text-sm">
-              <ErrorMessage name="password" />
-            </div>
+            <ErrorMessage
+              name="password"
+              component="div"
+              className="text-red-500 text-sm absolute pl-2 bottom-[-1.5rem]"              
+            />
           </div>
 
           <button
             type="submit"
-            className="w-full mt-6 bg-[#36190D] hover:bg-[#FFA72F] text-white font-bold py-2 rounded-md shadow-sm"
+            className="w-72 mt-6 bg-[#36190D] hover:bg-[#FFA72F] text-white font-bold py-2 rounded-md shadow-sm md:w-96"
           >
             Ingresar
           </button>

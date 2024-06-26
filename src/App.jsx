@@ -6,7 +6,8 @@ import ExpensesPage from './pages/expenses';
 import GroupDetailsPage from './pages/groups/groupDetails';
 import Login from './pages/auth/login';
 import Register from './pages/auth/signup';
-import ProtectedRoute from './components/auth/ProtectedRoute'; 
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import NotFoundPage from './pages/notFoundPage'
 
 const routes = [
   // Rutas protegidas
@@ -19,6 +20,9 @@ const routes = [
   // Rutas públicas
   { path: '/auth/login', element: <Login /> },
   { path: '/auth/signup', element: <Register /> },
+
+  // Ruta 404
+  { path: '*', element: <NotFoundPage /> },
 ];
 
 const router = createBrowserRouter(routes);

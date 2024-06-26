@@ -60,13 +60,15 @@ const Register = () => {
         });
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
+      const errorMessage = error.response.data.error;
+      if (errorMessage && errorMessage.includes('User with the same email already exists')) {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'El correo electrónico ya está registrado',
+          text: 'El correo electrónico ya está registrado, intenta con otro correo',
         });
       } else {
+        console.log(error.response)
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -78,13 +80,13 @@ const Register = () => {
 
   return (
     <div className="flex flex-col m-3 items-center min-h-screen">
-      <div className="mt-20 text-center">
-        <img className="h-auto w-48 object-cover" src={logo} alt="Grupo" />
+      <div className="text-center flex justify-center flex-col items-center">
+      <img className="h-auto w-48 object-cover" src={logo} alt="logo" />
         <h1 className="text-5xl font-bold text-[#36190D]">Mi vaquita</h1>
         <h1 className="font-bold text-[#FFA72F]">
           Compartir gastos con tus amigos
         </h1>
-        <h1 className="text-xl  mt-6 font-bold text-[#36190D]">Registro</h1>
+        <h1 className="text-xl  mt-4 font-bold text-[#36190D]">Registro</h1>
       </div>
 
       <Formik
@@ -95,35 +97,35 @@ const Register = () => {
           setSubmitting(false);
         }}
       >
-        <Form className="mt-4 mb-8 w-full max-w-sm">
-          <div className="mb-6 relative">
+        <Form className="mt-6 w-full max-w-sm h-full flex flex-col items-center">
+          <div className="mb-8 relative">
             <Field
               placeholder="Nombre"
               type="text"
               id="name"
               name="name"
-              className="w-full mt-1 border rounded-md shadow-sm h-10 px-4"
+              className="w-72 md:w-96 mt-1 border rounded-md shadow-sm h-10 px-4"
             />
             <LuUser className="text-2xl absolute inset-y-0 right-3 top-3" />
             <ErrorMessage
               name="name"
               component="div"
-              className="text-red-500 text-sm"
+              className="text-red-500 text-sm absolute pl-2 bottom-[-1.5rem]"           
             />
           </div>
-          <div className="mb-6 relative">
+          <div className="mb-8 relative">
             <Field
               placeholder="Correo electrónico"
               type="email"
               id="email"
               name="email"
-              className="w-full mt-1 border rounded-md shadow-sm h-10 px-4"
+              className="w-72 md:w-96 mt-1 border rounded-md shadow-sm h-10 px-4"
             />
             <LuUser className="text-2xl absolute inset-y-0 right-3 top-3" />
             <ErrorMessage
               name="email"
               component="div"
-              className="text-red-500 text-sm"
+              className="text-red-500 text-sm absolute pl-2 bottom-[-1.5rem]"           
             />
           </div>
           <div className="mb-6 relative">
@@ -132,7 +134,7 @@ const Register = () => {
               type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
-              className="w-full mt-1 border rounded-md shadow-sm h-10 pr-10 px-4"
+              className="w-72 md:w-96 mt-1 border rounded-md shadow-sm h-10 pr-10 px-4"
             />
             <span className="absolute inset-y-0 right-3 flex items-center text-sm leading-5">
               <button
@@ -150,18 +152,18 @@ const Register = () => {
             <ErrorMessage
               name="password"
               component="div"
-              className="text-red-500 text-sm"
+              className="text-red-500 text-sm absolute pl-2 bottom-[-1.5rem]"           
             />
           </div>
           <button
             type="submit"
-            className="w-full mt-6 bg-[#36190D] hover:bg-[#FFA72F] text-white font-bold py-2 px-4 rounded-md shadow-sm"
+            className="w-72 mt-4 bg-[#36190D] hover:bg-[#FFA72F] text-white font-bold py-2 px-4 rounded-md shadow-sm md:w-96"
           >
             Registrarme
           </button>
           <a
             href="/auth/login"
-            className="mt-6 flex items-center justify-center text-[#FFA72F] text-center"
+            className="mt-2 flex items-center justify-center text-[#FFA72F] text-center"
           >
             Volver al login
           </a>
