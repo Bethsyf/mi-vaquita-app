@@ -32,7 +32,7 @@ const Login = () => {
         'http://localhost:5000/api/v1/login',
         values
       );
-console.log(response.data)
+
       if (response.status === 200) {
         sessionStorage.setItem('token', response.data.token);
         sessionStorage.setItem('userId', response.data.userId);

@@ -83,11 +83,11 @@ const GroupDetailsPage = () => {
   };
   const handleOpenModalEdit = async () => {
     try {
-      await getGroup(); // Asegúrate de cargar el grupo actualizado
-      setIsEditModalOpen(true); // Establece el estado para abrir el modal de edición
+      await getGroup(); 
+      setIsEditModalOpen(true); 
     } catch (error) {
       console.error('Error al abrir el modal de edición:', error);
-      // Manejar el error según sea necesario
+    
     }
   };
 
@@ -127,7 +127,7 @@ const GroupDetailsPage = () => {
           timer: 3000,
           timerProgressBar: true,
         });
-        // Update group details
+
         getGroup();
         handleCloseModal();
       } else {
@@ -282,15 +282,15 @@ const GroupDetailsPage = () => {
   };
 
   const handleExitGroup = () => {
-    // Implementa la lógica necesaria para salir del grupo
+  
   };
 
   const deleteExpense = (expenseId) => {
-    // Implementa la lógica para eliminar un gasto específico
+
   };
 
   const editExpense = (expenseId) => {
-    // Implementa la lógica para editar un gasto específico
+
   };
 
   useEffect(() => {
@@ -306,19 +306,19 @@ const GroupDetailsPage = () => {
             type="button"
             text={'Nuevo Gasto'}
             styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
-            onClickFn={() => handleOpenModalEdit()} // Abrir modal de edición al hacer clic en Nuevo Gasto
+            onClickFn={() => handleOpenModalEdit()} 
           />
           <ButtonControl
             type="button"
             text={'Nuevo Amigo'}
             styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
-            onClickFn={() => handleOpenModalAdd()} // Abrir modal de añadir amigo al hacer clic en Nuevo Amigo
+            onClickFn={() => handleOpenModalAdd()} 
           />
           <ButtonControl
             type="button"
             text={'Editar Grupo'}
             styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
-            onClickFn={() => handleOpenModalEdit(true)} // Abrir modal de edición al hacer clic en Editar Grupo
+            onClickFn={() => handleOpenModalEdit(true)} 
           />
         </div>
         {group && (

@@ -22,11 +22,9 @@ const GroupsPage = () => {
   };
 
   const handleLogout = () => {
-    // Eliminar los datos de sesión
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('userId');
-    sessionStorage.removeItem('email');
-    // Redirigir al usuario a la página de inicio de sesión
+    sessionStorage.removeItem('email');   
     navigate('/auth/login');
   };
 

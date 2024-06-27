@@ -29,8 +29,8 @@ const NavMenu = () => {
   }, [location]);
 
   return (
-    <nav className="text-white py-4 px-5 w-full md:w-auto">
-      <ul className="flex font-bold justify-between space-x-4 md:space-x-40">
+    <nav className="text-white py-4 px-5 w-full md:w-auto md:mr-6">
+      <ul className="flex font-bold justify-between space-x-4 md:space-x-40 md:text-xl">
         <li>
           <Link
             to="/friends"

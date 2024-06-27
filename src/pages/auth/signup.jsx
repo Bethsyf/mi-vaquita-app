@@ -61,7 +61,7 @@ const Register = () => {
       }
     } catch (error) {
       const errorMessage = error.response.data.error;
-      if (errorMessage && errorMessage.includes('User with the same email already exists')) {
+      if (errorMessage?.includes('User with the same email already exists')) {
         Swal.fire({
           icon: 'error',
           title: 'Error',
