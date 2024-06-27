@@ -15,9 +15,19 @@ const GroupsPage = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const userId = sessionStorage.getItem('userId');
+  const name = sessionStorage.getItem('name')
 
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
+  };
+
+  const handleLogout = () => {
+    // Eliminar los datos de sesión
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('email');
+    // Redirigir al usuario a la página de inicio de sesión
+    navigate('/auth/login');
   };
 
   const getGroups = async () => {
@@ -153,7 +163,7 @@ const GroupsPage = () => {
 
   return (
     <main>
-      <HeaderView />
+       <HeaderView name={name} onLogout={handleLogout} />
       <div className="flex justify-end mt-9 md:mr-20">
         <ButtonControl
           type="button"

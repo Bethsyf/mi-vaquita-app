@@ -9,7 +9,10 @@ const CreateGroupView = ({ onClose, onCreateGroup, onEditGroup, groupToEdit }) =
   const [selectedColor, setSelectedColor] = useState('#FFFFFF');
   const modalRef = useRef(null);
 
-  const initialValues = groupToEdit ? { groupName: groupToEdit.name, color: groupToEdit.color } : {};
+  const initialValues = {
+    groupName: groupToEdit ? groupToEdit.name : '',
+    color: groupToEdit ? groupToEdit.color : selectedColor
+  };
 
   const validationSchema = Yup.object().shape({
     groupName: Yup.string()
