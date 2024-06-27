@@ -6,7 +6,7 @@ import ColorsView from './ColorsView';
 import PropTypes from 'prop-types';
 
 const CreateGroupView = ({ onClose, onCreateGroup, onEditGroup, groupToEdit }) => {
-  const [selectedColor, setSelectedColor] = useState('#FFFFFF');
+  const [selectedColor, setSelectedColor] = useState(groupToEdit ? groupToEdit.color : '#FFFFFF');
   const modalRef = useRef(null);
 
   const initialValues = {
@@ -60,7 +60,9 @@ const CreateGroupView = ({ onClose, onCreateGroup, onEditGroup, groupToEdit }) =
         <button type="button" className="absolute top-0 right-1 p-2 z-10" onClick={onClose}>
           <span className="text-lg">×</span>
         </button>
-        <h2 className="text-xl font-bold mb-4 text-center">Nuevo grupo</h2>
+        <h2 className="text-xl font-bold mb-4 text-center">
+          {groupToEdit ? 'Editar grupo' : 'Nuevo grupo'}
+        </h2>
         <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleFormSubmit}>
           {({ isSubmitting }) => (
             <Form>
@@ -76,7 +78,7 @@ const CreateGroupView = ({ onClose, onCreateGroup, onEditGroup, groupToEdit }) =
               <div className="mb-4 border border-gray-400 rounded-md p-3">
                 <ColorsView onSelectColor={handleColorSelect} selectedColor={selectedColor} />
               </div>
-              <ButtonControl text={'Crear'} styles={'w-60 mx-auto'} type="submit" disabled={isSubmitting} />
+              <ButtonControl text={groupToEdit ? 'Editar' : 'Crear'} styles={'w-60 mx-auto'} type="submit" disabled={isSubmitting} />
             </Form>
           )}
         </Formik>

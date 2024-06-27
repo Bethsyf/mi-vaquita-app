@@ -20,6 +20,7 @@ const GroupDetailsPage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); 
   const navigate = useNavigate();
   const { id } = useParams();
+  const name = sessionStorage.getItem('name')
 
   const getGroup = async () => {
     try {
@@ -299,7 +300,7 @@ const GroupDetailsPage = () => {
 
   return (
     <main>
-      <HeaderView />
+     <HeaderView name={name} />
       <div className="font-fredoka">
         <div className="mx-auto my-4 flex justify-center">
           <ButtonControl

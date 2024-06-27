@@ -21,12 +21,7 @@ const GroupsPage = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('userId');
-    sessionStorage.removeItem('email');   
-    navigate('/auth/login');
-  };
+ 
 
   const getGroups = async () => {
     try {
@@ -129,13 +124,12 @@ const GroupsPage = () => {
       }
     }
   };
-  
 
   const viewGroup = (groupId) => {
     navigate(`/groups/${groupId}`);
   };
 
-    const exitGroup = ({id}) => {console.log('aqui logica para salir de grupo', id)};
+  const exitGroup = ({id}) => {console.log('aqui logica para salir de grupo', id)};
 
   useEffect(() => {
     getGroups();
@@ -156,34 +150,33 @@ const GroupsPage = () => {
     balanceLabel = 'Debes: ';
   }
 
-
-
-
   return (
     <main>
-       <HeaderView name={name} onLogout={handleLogout} />
-      <div className="flex justify-end mt-9 md:mr-20">
-        <ButtonControl
-          type="button"
-          text={'Nuevo Grupo'}
-          styles={'mr-2'}
-          onClickFn={handleModalToggle}
-        />
-        {isModalOpen && (
-          <CreateGroupView
-            onClose={handleModalToggle}
-            onCreateGroup={createGroup}
+      <div className="sticky top-0 z-40 bg-white ">
+        <HeaderView name={name}/>
+        <div className="flex justify-end mt-9 md:mr-20">
+          <ButtonControl
+            type="button"
+            text={'Nuevo Grupo'}
+            styles={'mr-2'}
+            onClickFn={handleModalToggle}
           />
-        )}
-      </div>
-      <div className="ml-3 mb-8 md:ml-20">
-        <p className="hidden font-bold text-[#36190D] md:flex md:text-3xl">
-          GRUPOS
-        </p>
-        <p className="font-bold text-sm md:text-lg md:mt-4">{balanceLabel}</p>
-        <p className={`font-bold text-xl md:text-2xl ${totalBalanceColor}`}>
-          {totalBalanceText}
-        </p>
+          {isModalOpen && (
+            <CreateGroupView
+              onClose={handleModalToggle}
+              onCreateGroup={createGroup}
+            />
+          )}
+        </div>
+        <div className="ml-3 md:ml-20">
+          <p className="hidden font-bold text-[#36190D] md:flex md:text-3xl">
+            GRUPOS
+          </p>
+          <p className="font-bold text-sm md:text-lg md:mt-4">{balanceLabel}</p>
+          <p className={`font-bold text-xl md:text-2xl ${totalBalanceColor}`}>
+            {totalBalanceText}
+          </p>
+        </div>
       </div>
       <div className="flex justify-center items-center flex-wrap">
         {groups.map((group) => (
@@ -200,7 +193,6 @@ const GroupsPage = () => {
         ))}
       </div>
       <FooterView />
-
     </main>
   );
 };
