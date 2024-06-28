@@ -9,7 +9,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import ModalAddMember from '../../components/views/ModalAddMember';
-import CreateGroupView from '../../components/views/CreateGroupView';
+import FormGroupView from '../../components/views/FormGroupView';
 
 const GroupDetailsPage = () => {
   const [expenses, setExpenses] = useState([]);
@@ -46,6 +46,7 @@ const GroupDetailsPage = () => {
         navigate('/auth/login');
         return;
       }
+      
       const response = await axios.get('http://localhost:5000/api/v1/users', {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -104,6 +105,8 @@ const GroupDetailsPage = () => {
         return;
       }
   
+
+
       const response = await axios.post(
         `http://localhost:5000/api/v1/groups/add`, 
         {
@@ -156,7 +159,7 @@ const GroupDetailsPage = () => {
       });
     }
   };
-  console.log(users[1])
+ 
   const handleEditGroup = async (groupId, groupName, groupColor) => {
     try {
       const token = sessionStorage.getItem('token');
@@ -165,10 +168,12 @@ const GroupDetailsPage = () => {
         return;
       }
 
+      const upperCaseGroupName = groupName.toUpperCase(); 
+
       const response = await axios.put(
         `http://localhost:5000/api/v1/groups/${groupId}`,
         {
-          name: groupName,
+          name: upperCaseGroupName,
           color: groupColor,
         },
         {
@@ -346,7 +351,7 @@ const GroupDetailsPage = () => {
 
         {isEditModalOpen && (
        
-          <CreateGroupView
+          <FormGroupView
             onClose={() => setIsEditModalOpen(false)}
             onEditGroup={handleEditGroup}
             groupToEdit={group}

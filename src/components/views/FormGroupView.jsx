@@ -5,7 +5,7 @@ import ButtonControl from '../controls/ButtonControl';
 import ColorsView from './ColorsView';
 import PropTypes from 'prop-types';
 
-const CreateGroupView = ({ onClose, onCreateGroup, onEditGroup, groupToEdit }) => {
+const FormGroupView = ({ onClose, onCreateGroup, onEditGroup, groupToEdit }) => {
   const [selectedColor, setSelectedColor] = useState(groupToEdit ? groupToEdit.color : '#FFFFFF');
   const modalRef = useRef(null);
 
@@ -87,11 +87,11 @@ const CreateGroupView = ({ onClose, onCreateGroup, onEditGroup, groupToEdit }) =
   );
 };
 
-CreateGroupView.propTypes = {
+FormGroupView.propTypes = {
   onClose: PropTypes.func,
   onCreateGroup: PropTypes.func,
   onEditGroup: PropTypes.func,
   groupToEdit: PropTypes.object,
 };
 
-export default CreateGroupView;
+export default FormGroupView;

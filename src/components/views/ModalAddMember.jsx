@@ -47,19 +47,19 @@ const ModalAddMember = ({ groupName, users, loading, onSubmit, onClose }) => {
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-      <div className="bg-white p-8 rounded-lg relative max-h-full overflow-auto" ref={modalRef}>
+      <div className="bg-white p-8 rounded-lg relative max-h-full overflow-auto m-2" ref={modalRef}>
         <button type="button" className="absolute top-0 right-1 p-2 z-10" onClick={onClose}>
           <span className="text-lg">×</span>
         </button>
         <h2 className="text-xl font-bold mb-4 text-center">{groupName}</h2>
-        <p>Elige al menos un amigo para continuar:</p>
+        <p className='mb-6'>Elige al menos un amigo para continuar:</p>
         {loading ? (
           <p>Cargando usuarios...</p>
         ) : (
           <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleFormSubmit}>
             {({ isSubmitting, values, setFieldValue }) => (
               <Form>
-                <div className="mb-6">
+                <div className="mb-6 max-h-24 overflow-y-auto">
                   {users.map((user) => (
                     <label key={user.id} className="block">
                       <Field
@@ -83,8 +83,8 @@ const ModalAddMember = ({ groupName, users, loading, onSubmit, onClose }) => {
                       {user.email}
                     </label>
                   ))}
-                  <ErrorMessage name="emails" component="div" className="text-red-500 text-sm" />
                 </div>
+                <ErrorMessage name="emails" component="div" className="text-red-500 text-sm" />
                 <ButtonControl text={'Agregar'} styles={'w-60 mx-auto'} type="submit" disabled={isSubmitting} />
               </Form>
             )}

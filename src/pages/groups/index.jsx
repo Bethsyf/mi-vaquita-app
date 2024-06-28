@@ -7,7 +7,7 @@ import HeaderView from '../../components/views/HeaderView';
 import FooterView from '../../components/views/FooterView';
 import CardView from '../../components/views/CardView';
 import ButtonControl from '../../components/controls/ButtonControl';
-import CreateGroupView from '../../components/views/CreateGroupView';
+import FormGroupView from '../../components/views/FormGroupView';
 
 const GroupsPage = () => {
   const [groups, setGroups] = useState([]);
@@ -162,7 +162,7 @@ const GroupsPage = () => {
             onClickFn={handleModalToggle}
           />
           {isModalOpen && (
-            <CreateGroupView
+            <FormGroupView
               onClose={handleModalToggle}
               onCreateGroup={createGroup}
             />
