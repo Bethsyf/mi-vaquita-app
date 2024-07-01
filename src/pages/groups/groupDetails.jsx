@@ -46,24 +46,32 @@ const GroupDetailsPage = () => {
         navigate('/auth/login');
         return;
       }
-      
+  
       const response = await axios.get('http://localhost:5000/api/v1/users', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params: {
+          groupId: group.id,
+        },
       });
-
-      if (Array.isArray(response.data)) {
+  
+      if (Array.isArray(response.data) && response.data.length > 0) {
         setUsers(response.data);
+        setLoading(false);
+        setIsModalOpen(true);
       } else {
-        console.error(
-          'La respuesta de la API no contiene usuarios válidos:',
-          response.data
-        );
-        setUsers([]);
+        console.warn('No hay usuarios disponibles para agregar');
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'warning',
+          title: 'No hay más amigos para agregar a este grupo',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
       }
-      setLoading(false);
-      setIsModalOpen(true);
     } catch (error) {
       console.error('Error al obtener la lista de usuarios:', error);
       setLoading(false);
@@ -79,6 +87,7 @@ const GroupDetailsPage = () => {
       });
     }
   };
+  
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -97,7 +106,8 @@ const GroupDetailsPage = () => {
     setIsEditModalOpen(false);
   };
 
-  const handleAddMember = async () => {
+  const handleAddMember = async (emails) => {
+    console.log(emails);
     try {
       const token = sessionStorage.getItem('token');
       if (!token) {
@@ -105,22 +115,19 @@ const GroupDetailsPage = () => {
         return;
       }
   
-
-
       const response = await axios.post(
-        `http://localhost:5000/api/v1/groups/add`, 
+        `http://localhost:5000/api/v1/groups/add`,
         {
-          groupId: id, 
-          userIdToAdd: users[0].id
-        }, 
-
+          groupId: id,
+          userEmails: emails,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
+  
       if (response.status === 200) {
         Swal.fire({
           toast: true,
@@ -131,7 +138,7 @@ const GroupDetailsPage = () => {
           timer: 3000,
           timerProgressBar: true,
         });
-
+  
         getGroup();
         handleCloseModal();
       } else {
@@ -159,7 +166,8 @@ const GroupDetailsPage = () => {
       });
     }
   };
- 
+  
+  
   const handleEditGroup = async (groupId, groupName, groupColor) => {
     try {
       const token = sessionStorage.getItem('token');

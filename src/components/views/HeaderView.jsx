@@ -81,8 +81,8 @@ const HeaderView = ({ name }) => {
 };
 
 HeaderView.propTypes = {
-  name: PropTypes.string.isRequired,
-  onLogout: PropTypes.func.isRequired,
+  name: PropTypes.string,
+  onLogout: PropTypes.func,
 };
 
 export default HeaderView;
