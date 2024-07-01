@@ -14,6 +14,7 @@ import FormGroupView from '../../components/views/FormGroupView';
 const GroupDetailsPage = () => {
   const [expenses, setExpenses] = useState([]);
   const [group, setGroup] = useState(null);
+  const [participants, setParticipants] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,6 +35,23 @@ const GroupDetailsPage = () => {
         }
       );
       setGroup(response.data);
+    } catch (error) {
+      console.error('Error al obtener los detalles del grupo:', error);
+    }
+  };
+
+  const getCountParticipants = async () => {
+    try {
+      const token = sessionStorage.getItem('token');
+      const response = await axios.get(
+        `http://localhost:5000/api/v1/groups/participants/${group.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setParticipants(response.data);
     } catch (error) {
       console.error('Error al obtener los detalles del grupo:', error);
     }
@@ -308,8 +326,21 @@ const GroupDetailsPage = () => {
   };
 
   useEffect(() => {
-    getGroup();
-  }, [id]);
+    const fetchData = async () => {
+      await getGroup(); 
+
+      if (group) {
+        await getCountParticipants(); 
+      }
+    };
+
+    fetchData(); 
+
+ 
+  }, [id, group]);   
+  
+
+  
 
   return (
     <main>
@@ -338,6 +369,7 @@ const GroupDetailsPage = () => {
         {group && (
           <CardView
             groupName={group.name}
+            participants={participants.count}
             selectedColor={group.color}
             onDelete={() => deleteGroup(group.id)}
           />

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 const CardView = ({
   groupName,
   description,
+  participants,
   value,
   selectedColor,
   onView,
@@ -35,10 +36,8 @@ const CardView = ({
         />
       </div>
       <div className="content-container p-5">
-        <div className="tracking-wide text-sm font-semibold">{groupName}</div>
-
+        <div className="tracking-wide text-sm font-semibold">{groupName}</div>      
         <p className="text-gray-500">{description}</p>
-
         <p className={`font-bold ${textColor}`}>{balanceText}</p>
 
         <div className="flex space-x-2">
@@ -60,7 +59,7 @@ const CardView = ({
             </>
           ) : (
             <div>
-            <p className='font-bold'>Participantes: 0</p>
+            <p className='font-bold'>Participantes: {participants}</p>
               <ButtonControl
                 type="button"
                 text={'Eliminar grupo'}
@@ -78,6 +77,7 @@ const CardView = ({
 CardView.propTypes = {
   groupName: PropTypes.string,
   description: PropTypes.string,
+  participants: PropTypes.string,
   value: PropTypes.number,
   selectedColor: PropTypes.string,
   onView: PropTypes.func,
