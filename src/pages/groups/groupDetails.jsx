@@ -11,12 +11,14 @@ import 'sweetalert2/src/sweetalert2.scss';
 import ModalAddMember from '../../components/views/ModalAddMember';
 import FormGroupView from '../../components/views/FormGroupView';
 import CardExpenseView from '../../components/views/CardExpenseView';
+import ModalAddExpense from '../../components/views/ModalAddExpense';
 
 const GroupDetailsPage = () => {
   const [expenses, setExpenses] = useState([]);
   const [group, setGroup] = useState(null);
-  const [participants, setParticipants] = useState('');
+  const [participants, setParticipants] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalExpensesOpen, setIsModalExpensesOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -41,24 +43,7 @@ const GroupDetailsPage = () => {
     }
   };
 
-  const getCountParticipants = async () => {
-    try {
-      const token = sessionStorage.getItem('token');
-      const response = await axios.get(
-        `http://localhost:5000/api/v1/groups/participants/${group.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setParticipants(response.data);
-    } catch (error) {
-      console.error('Error al obtener los detalles del grupo:', error);
-    }
-  };
-
-  const handleOpenModalAdd = async () => {
+  const handleOpenModalAddMember = async () => {
     try {
       const token = sessionStorage.getItem('token');
       if (!token) {
@@ -121,6 +106,52 @@ const GroupDetailsPage = () => {
 
   const handleCloseModalEdit = () => {
     setIsEditModalOpen(false);
+  };
+
+  const handleOpenModalAddExpense = async () => {
+    try {
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        navigate('/auth/login');
+        return;
+      }
+
+      const response = await axios.get(
+        `http://localhost:5000/api/v1/groups/participants/${group.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data.participants);
+      if (response.status === 200) {
+        setParticipants(response.data.participants);
+        setIsModalExpensesOpen(true);
+      } else {
+        console.error('Error al listar los participantes');
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Error al agregar gasto',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      }
+    } catch (error) {
+      console.error('Error al listar los participantes:', error);
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'error',
+        title: 'Error al agregar gasto',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+    }
   };
 
   const handleAddMember = async (emails) => {
@@ -328,28 +359,111 @@ const GroupDetailsPage = () => {
     }
   };
 
-  const handleAddExpense = () => {
-    console.log('aqui va el modal para agregar gastos ');
+  const handleAddExpense = async (values) => {
+    try {
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        navigate('/auth/login');
+        return;
+      }
+
+      const email = values.paidByUserId;
+
+      if (!email) {
+        console.error('Email is required');
+        return;
+      }
+
+      const userResponse = await axios.get(
+        `http://localhost:5000/api/v1/users/email/${email}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const userIdPaid = userResponse.data.id;
+      console.log(
+        id,
+        values.expenseName,
+        values.amount,
+        userIdPaid,
+        values.participants
+      );
+
+      const response = await axios.post(
+        `http://localhost:5000/api/v1/expenses`,
+        {
+          groupId: id,
+          expenseName: values.expenseName,
+          amount: values.amount,
+          paidByUserId: userIdPaid,
+          participants: values.participants,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'Expense created successfully',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+        setExpenses((prevExpenses) => [...prevExpenses, response.data.expense]);
+        setIsModalExpensesOpen(false);
+      } else {
+        console.error('Error adding expense');
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Error adding expense',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      }
+    } catch (error) {
+      console.error('Error adding expense:', error);
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'error',
+        title: 'Error adding expense',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+    }
   };
 
   const deleteExpense = (expenseId) => {
-    console.log('click para elimar gasto', expenseId)
+    console.log('click para elimar gasto', expenseId);
   };
 
-  const viewExpense = (expenseId) => {console.log('click para ver detalle de gastos ', expenseId)};
+  const viewExpense = (expenseId) => {
+    console.log('click para ver detalle de gastos ', expenseId);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       await getGroup();
       if (group) {
-        await getCountParticipants();
         await getExpenses();
       }
     };
 
     fetchData();
   }, [id, group]);
-
 
   return (
     <main>
@@ -360,13 +474,13 @@ const GroupDetailsPage = () => {
             type="button"
             text={'Nuevo Gasto'}
             styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
-            onClickFn={() => handleAddExpense()}
+            onClickFn={() => handleOpenModalAddExpense()}
           />
           <ButtonControl
             type="button"
             text={'Nuevo Amigo'}
             styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
-            onClickFn={() => handleOpenModalAdd()}
+            onClickFn={() => handleOpenModalAddMember()}
           />
           <ButtonControl
             type="button"
@@ -375,7 +489,7 @@ const GroupDetailsPage = () => {
             onClickFn={() => handleOpenModalEdit(true)}
           />
         </div>
-        {group && (
+        {group && participants && (
           <CardGroupView
             groupName={group.name}
             participants={participants.count}
@@ -397,6 +511,15 @@ const GroupDetailsPage = () => {
             onClose={handleCloseModal}
           />
         )}
+        {isModalExpensesOpen && (
+          <ModalAddExpense
+            groupName={group.name}
+            loading={loading}
+            onSubmit={handleAddExpense}
+            onClose={() => setIsModalExpensesOpen(false)}
+            participants={participants.emails}
+          />
+        )}
 
         {isEditModalOpen && (
           <FormGroupView
@@ -410,7 +533,7 @@ const GroupDetailsPage = () => {
           {expenses.map((expense) => (
             <CardExpenseView
               key={expense.id}
-              expenseName={expense.expenseName}              
+              expenseName={expense.expenseName}
               paidBy={expense.paidBy}
               amount={expense.amount}
               participants={expense.participantsCount}
