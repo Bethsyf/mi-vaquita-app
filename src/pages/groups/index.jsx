@@ -5,9 +5,10 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import HeaderView from '../../components/views/HeaderView';
 import FooterView from '../../components/views/FooterView';
-import CardView from '../../components/views/CardView';
+import CardGroupView from '../../components/views/CardGroupView';
 import ButtonControl from '../../components/controls/ButtonControl';
 import FormGroupView from '../../components/views/FormGroupView';
+
 
 const GroupsPage = () => {
   const [groups, setGroups] = useState([]);
@@ -180,7 +181,7 @@ const GroupsPage = () => {
       </div>
       <div className="flex justify-center items-center flex-wrap">
         {groups.map((group) => (
-          <CardView
+          <CardGroupView
             key={group.id}
             groupName={group.name}
             description={group.description}

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import HeaderView from '../../components/views/HeaderView';
 import FooterView from '../../components/views/FooterView';
 import ButtonControl from '../../components/controls/ButtonControl';
-import CardView from '../../components/views/CardView';
+import CardGroupView from '../../components/views/CardGroupView';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import ModalAddMember from '../../components/views/ModalAddMember';
 import FormGroupView from '../../components/views/FormGroupView';
+import CardExpenseView from '../../components/views/CardExpenseView';
 
 const GroupDetailsPage = () => {
   const [expenses, setExpenses] = useState([]);
@@ -18,10 +19,10 @@ const GroupDetailsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); 
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
-  const name = sessionStorage.getItem('name')
+  const name = sessionStorage.getItem('name');
 
   const getGroup = async () => {
     try {
@@ -64,7 +65,7 @@ const GroupDetailsPage = () => {
         navigate('/auth/login');
         return;
       }
-  
+
       const response = await axios.get('http://localhost:5000/api/v1/users', {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -73,7 +74,7 @@ const GroupDetailsPage = () => {
           groupId: group.id,
         },
       });
-  
+
       if (Array.isArray(response.data) && response.data.length > 0) {
         setUsers(response.data);
         setLoading(false);
@@ -105,18 +106,16 @@ const GroupDetailsPage = () => {
       });
     }
   };
-  
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
   const handleOpenModalEdit = async () => {
     try {
-      await getGroup(); 
-      setIsEditModalOpen(true); 
+      await getGroup();
+      setIsEditModalOpen(true);
     } catch (error) {
       console.error('Error al abrir el modal de edición:', error);
-    
     }
   };
 
@@ -132,7 +131,7 @@ const GroupDetailsPage = () => {
         navigate('/auth/login');
         return;
       }
-  
+
       const response = await axios.post(
         `http://localhost:5000/api/v1/groups/add`,
         {
@@ -145,7 +144,7 @@ const GroupDetailsPage = () => {
           },
         }
       );
-  
+
       if (response.status === 200) {
         Swal.fire({
           toast: true,
@@ -156,7 +155,7 @@ const GroupDetailsPage = () => {
           timer: 3000,
           timerProgressBar: true,
         });
-  
+
         getGroup();
         handleCloseModal();
       } else {
@@ -184,8 +183,7 @@ const GroupDetailsPage = () => {
       });
     }
   };
-  
-  
+
   const handleEditGroup = async (groupId, groupName, groupColor) => {
     try {
       const token = sessionStorage.getItem('token');
@@ -194,7 +192,7 @@ const GroupDetailsPage = () => {
         return;
       }
 
-      const upperCaseGroupName = groupName.toUpperCase(); 
+      const upperCaseGroupName = groupName.toUpperCase();
 
       const response = await axios.put(
         `http://localhost:5000/api/v1/groups/${groupId}`,
@@ -313,61 +311,72 @@ const GroupDetailsPage = () => {
     });
   };
 
-  const handleExitGroup = () => {
-  
+  const getExpenses = async () => {
+    try {
+      const token = sessionStorage.getItem('token');
+      const response = await axios.get(
+        `http://localhost:5000/api/v1/groups/expenses/${group.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setExpenses(response.data.expenses);
+    } catch (error) {
+      console.error('Error al obtener los gastos del grupo:', error);
+    }
+  };
+
+  const handleAddExpense = () => {
+    console.log('aqui va el modal para agregar gastos ');
   };
 
   const deleteExpense = (expenseId) => {
-
+    console.log('click para elimar gasto', expenseId)
   };
 
-  const editExpense = (expenseId) => {
-
-  };
+  const viewExpense = (expenseId) => {console.log('click para ver detalle de gastos ', expenseId)};
 
   useEffect(() => {
     const fetchData = async () => {
-      await getGroup(); 
-
+      await getGroup();
       if (group) {
-        await getCountParticipants(); 
+        await getCountParticipants();
+        await getExpenses();
       }
     };
 
-    fetchData(); 
+    fetchData();
+  }, [id, group]);
 
- 
-  }, [id, group]);   
-  
-
-  
 
   return (
     <main>
-     <HeaderView name={name} />
+      <HeaderView name={name} />
       <div className="font-fredoka">
         <div className="mx-auto my-4 flex justify-center">
           <ButtonControl
             type="button"
             text={'Nuevo Gasto'}
             styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
-            onClickFn={() => handleOpenModalEdit()} 
+            onClickFn={() => handleAddExpense()}
           />
           <ButtonControl
             type="button"
             text={'Nuevo Amigo'}
             styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
-            onClickFn={() => handleOpenModalAdd()} 
+            onClickFn={() => handleOpenModalAdd()}
           />
           <ButtonControl
             type="button"
             text={'Editar Grupo'}
             styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
-            onClickFn={() => handleOpenModalEdit(true)} 
+            onClickFn={() => handleOpenModalEdit(true)}
           />
         </div>
         {group && (
-          <CardView
+          <CardGroupView
             groupName={group.name}
             participants={participants.count}
             selectedColor={group.color}
@@ -390,7 +399,6 @@ const GroupDetailsPage = () => {
         )}
 
         {isEditModalOpen && (
-       
           <FormGroupView
             onClose={() => setIsEditModalOpen(false)}
             onEditGroup={handleEditGroup}
@@ -400,15 +408,14 @@ const GroupDetailsPage = () => {
 
         <div className="flex justify-center items-center flex-wrap">
           {expenses.map((expense) => (
-            <CardView
+            <CardExpenseView
               key={expense.id}
-              groupName={expense.name}
-              description={expense.description}
-              value={expense.value}
-              selectedColor={expense.color}
-              onView={() => editExpense(expense.id)}
+              expenseName={expense.expenseName}              
+              paidBy={expense.paidBy}
+              amount={expense.amount}
+              participants={expense.participantsCount}
+              onView={() => viewExpense(expense.id)}
               onDelete={() => deleteExpense(expense.id)}
-              onExit={false}
               styles={'shadow-lg'}
             />
           ))}

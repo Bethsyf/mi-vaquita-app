@@ -2,7 +2,7 @@ import ButtonControl from '../controls/ButtonControl';
 import logo from '../../assets/logo.svg';
 import PropTypes from 'prop-types';
 
-const CardView = ({
+const CardGroupView = ({
   groupName,
   description,
   participants,
@@ -74,7 +74,7 @@ const CardView = ({
   );
 };
 
-CardView.propTypes = {
+CardGroupView.propTypes = {
   groupName: PropTypes.string,
   description: PropTypes.string,
   participants: PropTypes.string,
@@ -86,4 +86,4 @@ CardView.propTypes = {
   styles: PropTypes.string,
 };
 
-export default CardView;
+export default CardGroupView;
