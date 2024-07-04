@@ -124,7 +124,7 @@ const GroupDetailsPage = () => {
           },
         }
       );
-      console.log(response.data.participants);
+    
       if (response.status === 200) {
         setParticipants(response.data.participants);
         setIsModalExpensesOpen(true);
@@ -366,14 +366,15 @@ const GroupDetailsPage = () => {
         navigate('/auth/login');
         return;
       }
-
+  
       const email = values.paidByUserId;
-
+  
       if (!email) {
         console.error('Email is required');
         return;
       }
-
+  
+  
       const userResponse = await axios.get(
         `http://localhost:5000/api/v1/users/email/${email}`,
         {
@@ -382,16 +383,16 @@ const GroupDetailsPage = () => {
           },
         }
       );
-
+  
       const userIdPaid = userResponse.data.id;
-      console.log(
-        id,
-        values.expenseName,
-        values.amount,
-        userIdPaid,
-        values.participants
-      );
-
+  
+    
+      const selectedEmails = values.participants; 
+      const participantObjects = participants.emails
+        .map((email, index) => selectedEmails.includes(email) ? { userId: participants.ids[index] } : null)
+        .filter(participant => participant !== null);
+  
+   
       const response = await axios.post(
         `http://localhost:5000/api/v1/expenses`,
         {
@@ -399,7 +400,7 @@ const GroupDetailsPage = () => {
           expenseName: values.expenseName,
           amount: values.amount,
           paidByUserId: userIdPaid,
-          participants: values.participants,
+          participants: participantObjects,
         },
         {
           headers: {
@@ -407,7 +408,7 @@ const GroupDetailsPage = () => {
           },
         }
       );
-
+  
       if (response.status === 201) {
         Swal.fire({
           toast: true,
@@ -420,6 +421,7 @@ const GroupDetailsPage = () => {
         });
         setExpenses((prevExpenses) => [...prevExpenses, response.data.expense]);
         setIsModalExpensesOpen(false);
+        getExpenses();
       } else {
         console.error('Error adding expense');
         Swal.fire({
@@ -445,10 +447,75 @@ const GroupDetailsPage = () => {
       });
     }
   };
+  
 
-  const deleteExpense = (expenseId) => {
-    console.log('click para elimar gasto', expenseId);
+  const deleteExpense = async (expenseId) => {
+    Swal.fire({
+      title: 'Eliminar gasto',
+      text: '¿Está seguro de que desea borrar el gasto? Toda la información se perderá',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'No, cancelar',
+      confirmButtonColor: '#36190D',
+      cancelButtonColor: '#36190D',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const token = sessionStorage.getItem('token');
+          if (!token) {
+            navigate('/auth/login');
+            return;
+          }
+  
+          const response = await axios.delete(
+            `http://localhost:5000/api/v1/expenses/${expenseId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+  
+          if (response.status === 200) {
+            // Actualiza la lista de gastos después de eliminar
+            setExpenses(expenses.filter(expense => expense.id !== expenseId));
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: 'success',
+              title: 'Gasto eliminado exitosamente',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+            });
+          } else {
+            console.error('Error al eliminar el gasto');
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: 'error',
+              title: 'Error al eliminar el gasto',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+            });
+          }
+        } catch (error) {
+          console.error('Error al eliminar el gasto:', error);
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: 'Error al eliminar el gasto',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          });
+        }
+      }
+    });
   };
+  
 
   const viewExpense = (expenseId) => {
     console.log('click para ver detalle de gastos ', expenseId);
