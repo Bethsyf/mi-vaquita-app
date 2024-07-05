@@ -127,8 +127,9 @@ const ModalAddExpense = ({ groupName, participants, onSubmit, onClose }) => {
                 </Field>
                 <ErrorMessage name="paidByUserId" component="div" className="text-red-500 text-sm" />
               </div>
-              <div className="mb-4 max-h-24 overflow-y-auto">
-                <label className="block mb-1">Participantes:</label>
+              <div>Participantes:</div>
+              <div className="mb-4 max-h-24 overflow-y-auto">                
+                <label className="block "></label>
                 {participants.map((participant, index) => (
                   <label key={index} className="block">
                     <Field

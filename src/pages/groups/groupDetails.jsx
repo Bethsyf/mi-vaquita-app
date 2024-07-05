@@ -25,6 +25,8 @@ const GroupDetailsPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const name = sessionStorage.getItem('name');
+  const userId = sessionStorage.getItem('userId');
+  
 
   const getGroup = async () => {
     try {
@@ -343,6 +345,7 @@ const GroupDetailsPage = () => {
   };
 
   const getExpenses = async () => {
+   
     try {
       const token = sessionStorage.getItem('token');
       const response = await axios.get(
@@ -353,6 +356,7 @@ const GroupDetailsPage = () => {
           },
         }
       );
+     
       setExpenses(response.data.expenses);
     } catch (error) {
       console.error('Error al obtener los gastos del grupo:', error);
@@ -366,15 +370,14 @@ const GroupDetailsPage = () => {
         navigate('/auth/login');
         return;
       }
-  
+
       const email = values.paidByUserId;
-  
+
       if (!email) {
         console.error('Email is required');
         return;
       }
-  
-  
+
       const userResponse = await axios.get(
         `http://localhost:5000/api/v1/users/email/${email}`,
         {
@@ -383,68 +386,86 @@ const GroupDetailsPage = () => {
           },
         }
       );
-  
+
       const userIdPaid = userResponse.data.id;
-  
-    
-      const selectedEmails = values.participants; 
-      const participantObjects = participants.emails
-        .map((email, index) => selectedEmails.includes(email) ? { userId: participants.ids[index] } : null)
-        .filter(participant => participant !== null);
-  
-   
+
+      const selectedEmails = values.participants;
+      const participantObjects = selectedEmails.map((email) => {       
+        const participantId = participants.ids[participants.emails.indexOf(email)]; 
+        return {
+          
+          userId: participantId,
+        };
+      });
+      
+      console.log(participants, expenses, selectedEmails, participantObjects, userId)
+
+      
+      const upperCaseExpenseName = values.expenseName.toUpperCase(); 
+      
       const response = await axios.post(
         `http://localhost:5000/api/v1/expenses`,
         {
-          groupId: id,
-          expenseName: values.expenseName,
+          groupId: group.id,
+          expenseName: upperCaseExpenseName,
           amount: values.amount,
           paidByUserId: userIdPaid,
-          participants: participantObjects,
+          participants: participantObjects, 
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, 
           },
         }
       );
-  
+
       if (response.status === 201) {
         Swal.fire({
           toast: true,
           position: 'top-end',
           icon: 'success',
-          title: 'Expense created successfully',
+          title: 'Gasto creado exitosamente',
           showConfirmButton: false,
           timer: 3000,
           timerProgressBar: true,
-        });
-        setExpenses((prevExpenses) => [...prevExpenses, response.data.expense]);
-        setIsModalExpensesOpen(false);
-        getExpenses();
+        })
+        getExpenses()
       } else {
-        console.error('Error adding expense');
         Swal.fire({
           toast: true,
           position: 'top-end',
           icon: 'error',
-          title: 'Error adding expense',
+          title: 'Error al crear gasto',
           showConfirmButton: false,
           timer: 3000,
           timerProgressBar: true,
         });
       }
     } catch (error) {
-      console.error('Error adding expense:', error);
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'error',
-        title: 'Error adding expense',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
+      if (
+        error.response &&
+        error.response.status === 500 &&
+        error.response.data.error.includes(
+          'Expense with the same name already exists in this group'
+        )
+      ) {
+        Swal.fire({        
+          icon: 'error',               
+          title: 'El nombre del gasto ya existe en este grupo, intenta con otro nombre',    
+          showConfirmButton: true,  
+          confirmButtonColor: '#4c84a4'  
+        });
+      } else {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Error al crear gasto',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      }
     }
   };
   
@@ -476,8 +497,7 @@ const GroupDetailsPage = () => {
             }
           );
   
-          if (response.status === 200) {
-            // Actualiza la lista de gastos después de eliminar
+          if (response.status === 200) {           
             setExpenses(expenses.filter(expense => expense.id !== expenseId));
             Swal.fire({
               toast: true,
@@ -488,6 +508,7 @@ const GroupDetailsPage = () => {
               timer: 3000,
               timerProgressBar: true,
             });
+            getExpenses()
           } else {
             console.error('Error al eliminar el gasto');
             Swal.fire({
@@ -580,6 +601,7 @@ const GroupDetailsPage = () => {
         )}
         {isModalExpensesOpen && (
           <ModalAddExpense
+          userId={userId}
             groupName={group.name}
             loading={loading}
             onSubmit={handleAddExpense}
@@ -600,9 +622,12 @@ const GroupDetailsPage = () => {
           {expenses.map((expense) => (
             <CardExpenseView
               key={expense.id}
-              expenseName={expense.expenseName}
-              paidBy={expense.paidBy}
+              userId={userId}
+              expenseName={expense.expenseName}              
+              paidBy={paidBy}
               amount={expense.amount}
+              message={expense.amountDue.message}
+              amountDue={expense.amountDue.value}
               participants={expense.participantsCount}
               onView={() => viewExpense(expense.id)}
               onDelete={() => deleteExpense(expense.id)}

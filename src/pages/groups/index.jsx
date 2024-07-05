@@ -20,9 +20,7 @@ const GroupsPage = () => {
 
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
-  };
-
- 
+  }; 
 
   const getGroups = async () => {
     try {
