@@ -624,7 +624,7 @@ const GroupDetailsPage = () => {
               key={expense.id}
               userId={userId}
               expenseName={expense.expenseName}              
-              paidBy={paidBy}
+              paidBy={expense.paidBy}
               amount={expense.amount}
               message={expense.amountDue.message}
               amountDue={expense.amountDue.value}
