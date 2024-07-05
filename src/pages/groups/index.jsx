@@ -9,18 +9,19 @@ import CardGroupView from '../../components/views/CardGroupView';
 import ButtonControl from '../../components/controls/ButtonControl';
 import FormGroupView from '../../components/views/FormGroupView';
 
-
 const GroupsPage = () => {
-  const [groups, setGroups] = useState([]);
-  const [totalBalance, setTotalBalance] = useState(0);
-  const navigate = useNavigate();
+  const [groups, setGroups] = useState([]);    
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const userId = sessionStorage.getItem('userId');
-  const name = sessionStorage.getItem('name')
-
+  const name = sessionStorage.getItem('name');
+  const [totalAmountDue, setTotalAmountDue] = useState({
+    difference: 0,
+    message: 'Balanceado',
+  });
+  const navigate = useNavigate();
+  
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
-  }; 
+  };
 
   const getGroups = async () => {
     try {
@@ -30,7 +31,7 @@ const GroupsPage = () => {
         return;
       }
 
-      const response = await axios.get(`http://localhost:5000/api/v1/groups`, {
+      const response = await axios.get('http://localhost:5000/api/v1/groups', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -58,13 +59,13 @@ const GroupsPage = () => {
         navigate('/auth/login');
         return;
       }
-  
-      const upperCaseGroupName = groupName.toUpperCase(); 
-  
+
+      const upperCaseGroupName = groupName.toUpperCase();
+
       const response = await axios.post(
         'http://localhost:5000/api/v1/groups',
         {
-          name: upperCaseGroupName, 
+          name: upperCaseGroupName,
           color: groupColor,
         },
         {
@@ -73,7 +74,7 @@ const GroupsPage = () => {
           },
         }
       );
-  
+
       if (response.status === 201) {
         Swal.fire({
           toast: true,
@@ -83,8 +84,8 @@ const GroupsPage = () => {
           showConfirmButton: false,
           timer: 3000,
           timerProgressBar: true,
-        })
-        getGroups()
+        });
+        getGroups();
       } else {
         Swal.fire({
           toast: true,
@@ -100,15 +101,13 @@ const GroupsPage = () => {
       if (
         error.response &&
         error.response.status === 500 &&
-        error.response.data.error.includes(
-          'Group with the same name already exists'
-        )
+        error.response.data.error.includes('Group with the same name already exists')
       ) {
-        Swal.fire({        
-          icon: 'error',               
-          title: 'El nombre de grupo ya existe, intenta con otro nombre',    
-          showConfirmButton: true,  
-          confirmButtonColor: '#4c84a4'  
+        Swal.fire({
+          icon: 'error',
+          title: 'El nombre de grupo ya existe, intenta con otro nombre',
+          showConfirmButton: true,
+          confirmButtonColor: '#4c84a4',
         });
       } else {
         Swal.fire({
@@ -128,31 +127,76 @@ const GroupsPage = () => {
     navigate(`/groups/${groupId}`);
   };
 
-  const exitGroup = ({id}) => {console.log('aqui logica para salir de grupo', id)};
+  const exitGroup = (groupId) => {
+    console.log('Lógica para salir de grupo aquí', groupId);
+  };
 
   useEffect(() => {
     getGroups();
   }, []);
 
-  let totalBalanceText, totalBalanceColor, balanceLabel;
-  if (totalBalance < 0) {
-    totalBalanceText = `$${Math.abs(totalBalance)}`;
-    totalBalanceColor = 'text-[#66B04C]';
-    balanceLabel = 'Me deben: ';
-  } else if (totalBalance >= 0) {
-    totalBalanceText = `$${totalBalance}`;
-    totalBalanceColor = 'text-[#FF2530]';
-    balanceLabel = 'Debes: ';
-  } else {
-    totalBalanceText = '$0';
-    totalBalanceColor = 'text-[#FF2530]';
-    balanceLabel = 'Debes: ';
-  }
+  useEffect(() => {
+    const calculateTotalAmountDue = () => {
+      let totalMeDeben = 0;
+      let totalDebo = 0;
+
+      groups.forEach((group) => {
+        if (group.totalAmountMessage === 'Me deben') {
+          totalMeDeben += group.totalAmountDue;
+        } else if (group.totalAmountMessage === 'Debo') {
+          totalDebo += group.totalAmountDue;
+        }
+      });
+
+      const difference = totalMeDeben - totalDebo;
+      const message = difference > 0 ? 'Me deben' : difference < 0 ? 'Debo' : 'Balanceado';
+
+      setTotalAmountDue({
+        difference: Math.abs(difference),
+        message: message,
+      });
+    };
+
+    calculateTotalAmountDue();
+  }, [groups]);
+
+  const getMessageColorClass = (message) => {
+    switch (message) {
+      case 'Debo':
+        return 'text-red-500';
+      case 'Me deben':
+        return 'text-blue-500';
+      case 'Balanceado':
+        return 'text-gray-500';
+      default:
+        return 'text-black';
+    }
+  };
+
+  const getBalanceLabel = (message) => {
+    switch (message) {
+      case 'Debo':
+        return 'Debo: ';
+      case 'Me deben':
+        return 'Me deben: ';
+      case 'Balanceado':
+        return 'Balanceado: ';
+      default:
+        return 'Balanceado: ';
+    }
+  };
+
+  const balanceLabel = getBalanceLabel(totalAmountDue.message);
+  const totalBalanceText = `$${totalAmountDue.difference.toLocaleString('es-ES', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+  const totalBalanceColor = getMessageColorClass(totalAmountDue.message);
 
   return (
     <main>
       <div className="sticky top-0 z-40 bg-white ">
-        <HeaderView name={name}/>
+        <HeaderView name={name} />
         <div className="flex justify-end mt-9 md:mr-20">
           <ButtonControl
             type="button"
@@ -171,7 +215,9 @@ const GroupsPage = () => {
           <p className="hidden font-bold text-[#36190D] md:flex md:text-3xl">
             GRUPOS
           </p>
-          <p className="font-bold text-sm md:text-lg md:mt-4">{balanceLabel}</p>
+          <p className={`font-bold text-xl md:text-lg md:mt-4 ${totalBalanceColor}`}>
+            {balanceLabel}
+          </p>
           <p className={`font-bold text-xl md:text-2xl ${totalBalanceColor}`}>
             {totalBalanceText}
           </p>
@@ -182,10 +228,11 @@ const GroupsPage = () => {
           <CardGroupView
             key={group.id}
             groupName={group.name}
-            description={group.description}
-            value={group.value}
+            participants={group.participant_count}
+            message={group.totalAmountMessage}
+            amountDue={group.totalAmountDue}
             selectedColor={group.color}
-            onView={() => viewGroup(group.id)}           
+            onView={() => viewGroup(group.id)}
             onExit={() => exitGroup(group.id)}
             styles={'shadow-lg'}
           />

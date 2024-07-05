@@ -14,17 +14,17 @@ const CardExpenseView = ({
 }) => {
   const cardStyles = `flex items-center m-2 overflow-hidden pl-2 md:m-6 ${styles}`;
 
-  // Determina la clase de color basada en el mensaje
+  
   const getMessageColorClass = () => {
     switch (message) {
       case 'Debo':
-        return 'text-red-500'; // Rojo
+        return 'text-red-500'; 
       case 'Me deben':
-        return 'text-blue-500'; // Azul
+        return 'text-blue-500'; 
       case 'No participé':
-        return 'text-gray-500'; // Gris oscuro
+        return 'text-gray-500'; 
       default:
-        return 'text-black'; // Negro por defecto
+        return 'text-black'; 
     }
   };
 
@@ -61,13 +61,8 @@ const CardExpenseView = ({
 };
 
 CardExpenseView.propTypes = {
-  userId: PropTypes.number.isRequired,
   expenseName: PropTypes.string.isRequired,
-  participants: PropTypes.arrayOf(
-    PropTypes.shape({
-      userId: PropTypes.number.isRequired,
-    })
-  ).isRequired,
+  participants: PropTypes.number.isRequired,   
   paidBy: PropTypes.string.isRequired,
   amount: PropTypes.number.isRequired,
   amountDue: PropTypes.number.isRequired,

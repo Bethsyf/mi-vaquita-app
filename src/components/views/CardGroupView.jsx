@@ -3,10 +3,10 @@ import logo from '../../assets/logo.svg';
 import PropTypes from 'prop-types';
 
 const CardGroupView = ({
-  groupName,
-  description,
+  groupName, 
   participants,
-  value,
+ message,
+ amountDue,
   selectedColor,
   onView,
   onDelete,
@@ -15,17 +15,19 @@ const CardGroupView = ({
 }) => {
   const cardStyles = `flex items-center m-2  overflow-hidden pl-2 md:m-6 ${styles}`;
 
-  let textColor, balanceText;
-  if (value < 0) {
-    textColor = 'text-blue-500';
-    balanceText = `Me deben: ${Math.abs(value)}`;
-  } else if (value > 0) {
-    textColor = 'text-red-500';
-    balanceText = `Debes: ${value}`;
-  } else {
-    textColor = 'text-red-500';
-    balanceText = 'Debes: 0';
-  }
+  const getMessageColorClass = () => {
+    switch (message) {
+      case 'Debo':
+        return 'text-red-500'; 
+      case 'Me deben':
+        return 'text-blue-500'; 
+      case 'Balanceado':
+        return 'text-gray-500'; 
+      default:
+        return 'text-black'; 
+    }
+  };
+
   return (
     <div className={`${cardStyles} font-fredoka`}>
       <div className="h-20 w-20 p-3" style={{ backgroundColor: selectedColor }}>
@@ -36,10 +38,11 @@ const CardGroupView = ({
         />
       </div>
       <div className="content-container p-5">
-        <div className="tracking-wide text-sm font-semibold">{groupName}</div>      
-        <p className="text-gray-500">{description}</p>
-        <p className={`font-bold ${textColor}`}>{balanceText}</p>
-
+        <div className="tracking-wide text-m font-semibold">{groupName}</div>  
+        <p className={`font-semibold ${getMessageColorClass()}`}>{`${message}: $${amountDue.toLocaleString('es-ES', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`}</p>             
         <div className="flex space-x-2">
           {onExit ? (
             <>
@@ -59,7 +62,7 @@ const CardGroupView = ({
             </>
           ) : (
             <div>
-            <p className='font-bold'>Participantes: {participants}</p>
+            <p className='font-bold'>Participantes: {participants}</p> 
               <ButtonControl
                 type="button"
                 text={'Eliminar grupo'}
@@ -75,10 +78,10 @@ const CardGroupView = ({
 };
 
 CardGroupView.propTypes = {
-  groupName: PropTypes.string,
-  description: PropTypes.string,
+  groupName: PropTypes.string,  
   participants: PropTypes.string,
-  value: PropTypes.number,
+  amountDue: PropTypes.number.isRequired,
+  message: PropTypes.string.isRequired,
   selectedColor: PropTypes.string,
   onView: PropTypes.func,
   onDelete: PropTypes.func,

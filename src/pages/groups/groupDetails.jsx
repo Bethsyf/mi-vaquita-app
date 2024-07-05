@@ -22,6 +22,10 @@ const GroupDetailsPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [totalAmountDue, setTotalAmountDue] = useState({
+    difference: 0,  
+    message: 'Balanceado',
+  });
   const navigate = useNavigate();
   const { id } = useParams();
   const name = sessionStorage.getItem('name');
@@ -94,9 +98,15 @@ const GroupDetailsPage = () => {
     }
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModalMember = () => {
     setIsModalOpen(false);
   };
+
+  const handleCloseModalExpense = () => {
+    setIsModalExpensesOpen(false);
+  };
+
+ 
   const handleOpenModalEdit = async () => {
     try {
       await getGroup();
@@ -110,7 +120,7 @@ const GroupDetailsPage = () => {
     setIsEditModalOpen(false);
   };
 
-  const handleOpenModalAddExpense = async () => {
+  const getParticipants = async () => {
     try {
       const token = sessionStorage.getItem('token');
       if (!token) {
@@ -128,8 +138,7 @@ const GroupDetailsPage = () => {
       );
     
       if (response.status === 200) {
-        setParticipants(response.data.participants);
-        setIsModalExpensesOpen(true);
+        setParticipants(response.data.participants);        
       } else {
         console.error('Error al listar los participantes');
         Swal.fire({
@@ -156,8 +165,15 @@ const GroupDetailsPage = () => {
     }
   };
 
-  const handleAddMember = async (emails) => {
-    console.log(emails);
+  const handleOpenModalAddExpense = async () => {
+    getParticipants()
+    getExpenses()
+    setIsModalExpensesOpen(!isModalExpensesOpen);    
+  };
+
+  
+
+  const handleAddMember = async (emails) => {  
     try {
       const token = sessionStorage.getItem('token');
       if (!token) {
@@ -190,7 +206,7 @@ const GroupDetailsPage = () => {
         });
 
         getGroup();
-        handleCloseModal();
+        handleCloseModalMember();
       } else {
         console.error('Error al agregar miembros');
         Swal.fire({
@@ -358,6 +374,28 @@ const GroupDetailsPage = () => {
       );
      
       setExpenses(response.data.expenses);
+
+      let totalMeDeben = 0;
+      let totalDebo = 0;
+  
+      response.data.expenses.forEach(expense => {
+        if (expense.amountDue.message === 'Me deben') {
+          totalMeDeben += expense.amountDue.value;
+        } else if (expense.amountDue.message === 'Debo') {
+          totalDebo += expense.amountDue.value;
+        }
+      });
+  
+     
+      const difference = totalMeDeben - totalDebo;
+      const message = difference > 0 ? 'Me deben' : difference < 0 ? 'Debo' : 'Balanceado';
+  
+ 
+      setTotalAmountDue({
+        difference: Math.abs(difference),       
+        message: message,
+      });
+
     } catch (error) {
       console.error('Error al obtener los gastos del grupo:', error);
     }
@@ -397,10 +435,6 @@ const GroupDetailsPage = () => {
           userId: participantId,
         };
       });
-      
-      console.log(participants, expenses, selectedEmails, participantObjects, userId)
-
-      
       const upperCaseExpenseName = values.expenseName.toUpperCase(); 
       
       const response = await axios.post(
@@ -430,6 +464,7 @@ const GroupDetailsPage = () => {
           timerProgressBar: true,
         })
         getExpenses()
+        handleCloseModalExpense()
       } else {
         Swal.fire({
           toast: true,
@@ -547,11 +582,12 @@ const GroupDetailsPage = () => {
       await getGroup();
       if (group) {
         await getExpenses();
+        await getParticipants()
       }
     };
 
     fetchData();
-  }, [id, group]);
+  }, [group]);
 
   return (
     <main>
@@ -581,6 +617,8 @@ const GroupDetailsPage = () => {
           <CardGroupView
             groupName={group.name}
             participants={participants.count}
+            message={totalAmountDue.message}
+            amountDue={totalAmountDue.difference}
             selectedColor={group.color}
             onDelete={() => deleteGroup(group.id)}
           />
@@ -596,7 +634,7 @@ const GroupDetailsPage = () => {
             users={users}
             loading={loading}
             onSubmit={handleAddMember}
-            onClose={handleCloseModal}
+            onClose={handleCloseModalMember}
           />
         )}
         {isModalExpensesOpen && (
@@ -605,7 +643,7 @@ const GroupDetailsPage = () => {
             groupName={group.name}
             loading={loading}
             onSubmit={handleAddExpense}
-            onClose={() => setIsModalExpensesOpen(false)}
+            onClose={handleCloseModalExpense}
             participants={participants.emails}
           />
         )}
