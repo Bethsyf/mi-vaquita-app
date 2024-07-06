@@ -589,94 +589,98 @@ const GroupDetailsPage = () => {
     fetchData();
   }, [group]);
 
-  return (
-    <main>
-      <HeaderView name={name} />
-      <div className="font-fredoka">
-        <div className="mx-auto my-4 flex justify-center">
-          <ButtonControl
-            type="button"
-            text={'Nuevo Gasto'}
-            styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
-            onClickFn={() => handleOpenModalAddExpense()}
-          />
-          <ButtonControl
-            type="button"
-            text={'Nuevo Amigo'}
-            styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
-            onClickFn={() => handleOpenModalAddMember()}
-          />
-          <ButtonControl
-            type="button"
-            text={'Editar Grupo'}
-            styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
-            onClickFn={() => handleOpenModalEdit(true)}
-          />
-        </div>
-        {group && participants && (
-          <CardGroupView
-            groupName={group.name}
-            participants={participants.count}
-            message={totalAmountDue.message}
-            amountDue={totalAmountDue.difference}
-            selectedColor={group.color}
-            onDelete={() => deleteGroup(group.id)}
-          />
-        )}
-
-        <h2 className="font-bold text-[#FFA72F] border-b border-gray-300 pb-2 mb-2 mt-8 mx-3 md:text-2xl">
-          GASTOS
-        </h2>
-
-        {isModalOpen && (
-          <ModalAddMember
-            groupName={group.name}
-            users={users}
-            loading={loading}
-            onSubmit={handleAddMember}
-            onClose={handleCloseModalMember}
-          />
-        )}
-        {isModalExpensesOpen && (
-          <ModalAddExpense
-          userId={userId}
-            groupName={group.name}
-            loading={loading}
-            onSubmit={handleAddExpense}
-            onClose={handleCloseModalExpense}
-            participants={participants.emails}
-          />
-        )}
-
-        {isEditModalOpen && (
-          <FormGroupView
-            onClose={() => setIsEditModalOpen(false)}
-            onEditGroup={handleEditGroup}
-            groupToEdit={group}
-          />
-        )}
-
-        <div className="flex justify-center items-center flex-wrap">
-          {expenses.map((expense) => (
-            <CardExpenseView
-              key={expense.id}
-              userId={userId}
-              expenseName={expense.expenseName}              
-              paidBy={expense.paidBy}
-              amount={expense.amount}
-              message={expense.amountDue.message}
-              amountDue={expense.amountDue.value}
-              participants={expense.participantsCount}
-              onView={() => viewExpense(expense.id)}
-              onDelete={() => deleteExpense(expense.id)}
-              styles={'shadow-lg'}
-            />
-          ))}
-        </div>
+  
+    return (
+      <div className="flex flex-col min-h-screen">
+        <main className="flex-grow">
+          <HeaderView name={name} />
+          <div className="font-fredoka ">
+            <div className="mx-auto my-4 flex justify-center">
+              <ButtonControl
+                type="button"
+                text={'Nuevo Gasto'}
+                styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
+                onClickFn={() => handleOpenModalAddExpense()}
+              />
+              <ButtonControl
+                type="button"
+                text={'Nuevo Amigo'}
+                styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
+                onClickFn={() => handleOpenModalAddMember()}
+              />
+              <ButtonControl
+                type="button"
+                text={'Editar Grupo'}
+                styles={'text-xs font-bold px-2 mx-1 md:text-lg md:mx-10 md:px-8'}
+                onClickFn={() => handleOpenModalEdit(true)}
+              />
+            </div>
+            {group && participants && (
+              <CardGroupView
+                groupName={group.name}
+                participants={participants.count}
+                message={totalAmountDue.message}
+                amountDue={totalAmountDue.difference}
+                selectedColor={group.color}
+                onDelete={() => deleteGroup(group.id)}
+              />
+            )}
+  
+            <h2 className="font-bold text-[#FFA72F] border-b border-gray-300 pb-2 mb-2 mt-8 mx-3 md:text-2xl">
+              GASTOS
+            </h2>
+  
+            {isModalOpen && (
+              <ModalAddMember
+                groupName={group.name}
+                users={users}
+                loading={loading}
+                onSubmit={handleAddMember}
+                onClose={handleCloseModalMember}
+              />
+            )}
+            {isModalExpensesOpen && (
+              <ModalAddExpense
+                userId={userId}
+                groupName={group.name}
+                loading={loading}
+                onSubmit={handleAddExpense}
+                onClose={handleCloseModalExpense}
+                participants={participants.emails}
+              />
+            )}
+  
+            {isEditModalOpen && (
+              <FormGroupView
+                onClose={() => setIsEditModalOpen(false)}
+                onEditGroup={handleEditGroup}
+                groupToEdit={group}
+              />
+            )}
+  
+            <div className="flex justify-center items-center flex-wrap">
+              {expenses.map((expense) => (
+                <CardExpenseView
+                  key={expense.id}
+                  userId={userId}
+                  expenseName={expense.expenseName}
+                  paidBy={expense.paidBy}
+                  amount={expense.amount}
+                  message={expense.amountDue.message}
+                  amountDue={expense.amountDue.value}
+                  participants={expense.participantsCount}
+                  onView={() => viewExpense(expense.id)}
+                  onDelete={() => deleteExpense(expense.id)}
+                  styles={'shadow-lg'}
+                />
+              ))}
+            </div>
+          </div>
+        </main>
+        <FooterView />
       </div>
-      <FooterView />
-    </main>
-  );
-};
+    );
+  };
+
 
 export default GroupDetailsPage;
