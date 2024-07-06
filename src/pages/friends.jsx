@@ -28,30 +28,35 @@ const FriendsPage = () => {
   };
 
   return (
-    <main className="min-h-screen">
-       <div className="sticky top-0 z-40">
-      <HeaderView name={name} /></div>
-      <div className="container mx-auto px-2 py-8 md:px-auto">
-        <h1 className="text-3xl font-semibold text-center mb-8 ">Lista de Amigos</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {users.map((user) => (
-            <div
-              key={user.id}
-              className={`bg-white shadow-md rounded-lg p-4 flex items-center`}
-            >
-              <div className="flex-shrink-0 h-20 w-20 p-2">
-                <BiSolidUserCircle className="h-full w-full object-cover rounded-full text-white bg-[#36190D]" />
-              </div>
-              <div className="ml-4">
-                <h3 className="text-xl font-semibold mb-2">{user.name}</h3>
-                <p className="text-gray-600 mb-4">{user.email}</p>
-              </div>
-            </div>
-          ))}
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-grow">
+        <div className="sticky top-0 z-40">
+          <HeaderView name={name} />
         </div>
-      </div>
+        <div className="container mx-auto px-2 py-8 md:px-auto">
+          <h1 className="text-3xl font-semibold text-center mb-8">
+            Lista de Usuarios
+          </h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {users.map((user) => (
+              <div
+                key={user.id}
+                className={`bg-white shadow-md rounded-lg p-4 flex items-center`}
+              >
+                <div className="flex-shrink-0 h-20 w-20 p-2">
+                  <BiSolidUserCircle className="h-full w-full object-cover rounded-full text-white bg-[#36190D]" />
+                </div>
+                <div className="ml-4">
+                  <h3 className="text-xl font-semibold mb-2">{user.name}</h3>
+                  <p className="text-gray-600 mb-4">{user.email}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
       <FooterView />
-    </main>
+    </div>
   );
 };
 

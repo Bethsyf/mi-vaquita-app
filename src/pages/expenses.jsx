@@ -6,7 +6,8 @@ import FooterView from '../components/views/FooterView';
 const ExpensesPage = () => {
   const [expenses, setExpenses] = useState([]);
   const name = sessionStorage.getItem('name');
-
+  const userId = sessionStorage.getItem('userId');
+  
   useEffect(() => {
     getExpenses();
   }, []);
@@ -14,7 +15,7 @@ const ExpensesPage = () => {
   const getExpenses = async () => {
     try {
       const token = sessionStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/v1/expenses/user/2', {
+      const response = await axios.get(`http://localhost:5000/api/v1/expenses/user/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
