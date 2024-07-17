@@ -38,7 +38,7 @@ const ExpensesPage = () => {
               <div key={expense.id} className="bg-white shadow-md rounded-lg p-4">
                 <div className="flex justify-between items-center">
                   <h3 className="text-xl font-semibold">{expense.expensename}</h3>
-                  <span className="text-gray-500 font-bold">Creado: {new Date(expense.createdat).toLocaleDateString()}</span>
+                  <span className="text-gray-500 font-bold text-right">Creado: {new Date(expense.createdat).toLocaleDateString()}</span>
                 </div>
                 <div className="mt-2">
                   <p className="text-gray-600">Grupo: {expense.groupname}</p>

@@ -3,8 +3,7 @@ import HeaderView from '../../components/views/HeaderView';
 import FooterView from '../../components/views/FooterView';
 import ButtonControl from '../../components/controls/ButtonControl';
 import CardGroupView from '../../components/views/CardGroupView';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
@@ -32,7 +31,7 @@ const GroupDetailsPage = () => {
   const userId = sessionStorage.getItem('userId');
   
 
-  const getGroup = async () => {
+  const getGroup = async (id) => {
     try {
       const token = sessionStorage.getItem('token');
       const response = await axios.get(
@@ -48,7 +47,8 @@ const GroupDetailsPage = () => {
       console.error('Error al obtener los detalles del grupo:', error);
     }
   };
-
+      
+      
   const handleOpenModalAddMember = async () => {
     try {
       const token = sessionStorage.getItem('token');
@@ -120,16 +120,16 @@ const GroupDetailsPage = () => {
     setIsEditModalOpen(false);
   };
 
-  const getParticipants = async () => {
+  const getParticipants = async (groupId) => {
+   
     try {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem('token');     
       if (!token) {
         navigate('/auth/login');
         return;
-      }
-
+      }     
       const response = await axios.get(
-        `http://localhost:5000/api/v1/groups/participants/${group.id}`,
+        `http://localhost:5000/api/v1/groups/participants/${groupId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -138,14 +138,14 @@ const GroupDetailsPage = () => {
       );
     
       if (response.status === 200) {
-        setParticipants(response.data.participants);        
+        setParticipants(response.data.participants);   
       } else {
         console.error('Error al listar los participantes');
         Swal.fire({
           toast: true,
           position: 'top-end',
           icon: 'error',
-          title: 'Error al agregar gasto',
+          title: 'Error al listar los gastos',
           showConfirmButton: false,
           timer: 3000,
           timerProgressBar: true,
@@ -157,7 +157,7 @@ const GroupDetailsPage = () => {
         toast: true,
         position: 'top-end',
         icon: 'error',
-        title: 'Error al agregar gasto',
+        title: 'Error al listar los gastos',
         showConfirmButton: false,
         timer: 3000,
         timerProgressBar: true,
@@ -360,21 +360,19 @@ const GroupDetailsPage = () => {
     });
   };
 
-  const getExpenses = async () => {
-   
+  const getExpenses = async (groupId) => {   
     try {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem('token');     
       const response = await axios.get(
-        `http://localhost:5000/api/v1/groups/expenses/${group.id}`,
+        `http://localhost:5000/api/v1/groups/expenses/${groupId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-     
+      
       setExpenses(response.data.expenses);
-
       let totalMeDeben = 0;
       let totalDebo = 0;
   
@@ -576,18 +574,18 @@ const GroupDetailsPage = () => {
   const viewExpense = (expenseId) => {
     console.log('click para ver detalle de gastos ', expenseId);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await getGroup();
-      if (group) {
-        await getExpenses();
-        await getParticipants()
+ 
+  useEffect(() => {   
+    const fetchData = () => {    
+      getGroup(id)
+      if (id) {
+     getExpenses(id)
+      getParticipants(id)
       }
     };
 
     fetchData();
-  }, [group]);
+  },[id]);
 
   
     return (
