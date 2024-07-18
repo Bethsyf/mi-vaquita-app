@@ -109,7 +109,7 @@ const GroupDetailsPage = () => {
  
   const handleOpenModalEdit = async () => {
     try {
-      await getGroup();
+      await getGroup(id);
       setIsEditModalOpen(true);
     } catch (error) {
       console.error('Error al abrir el modal de edición:', error);
@@ -205,7 +205,7 @@ const GroupDetailsPage = () => {
           timerProgressBar: true,
         });
 
-        getGroup();
+        getGroup(id);
         handleCloseModalMember();
       } else {
         console.error('Error al agregar miembros');
@@ -266,7 +266,7 @@ const GroupDetailsPage = () => {
           timer: 3000,
           timerProgressBar: true,
         });
-        getGroup();
+        getGroup(id);
         handleCloseModalEdit();
       } else {
         console.error('Error al editar el grupo');

@@ -16,7 +16,7 @@ const FriendsPage = () => {
   const getAllUsers = async () => {
     try {
       const token = sessionStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/v1/users/all', {
+      const response = await axios.get( `${import.meta.env.VITE_API_URL}/api/v1/users/all`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
