@@ -29,7 +29,7 @@ const Login = () => {
   const loginUser = async (values) => {
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/v1/login',
+        `${import.meta.env.VITE_API_URL}/api/v1/login`,
         values
       );
 

@@ -35,7 +35,7 @@ const GroupDetailsPage = () => {
     try {
       const token = sessionStorage.getItem('token');
       const response = await axios.get(
-        `http://localhost:5000/api/v1/groups/${id}`,
+       `${import.meta.env.VITE_API_URL}/api/v1/groups/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ const GroupDetailsPage = () => {
         return;
       }
 
-      const response = await axios.get('http://localhost:5000/api/v1/users', {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -129,7 +129,7 @@ const GroupDetailsPage = () => {
         return;
       }     
       const response = await axios.get(
-        `http://localhost:5000/api/v1/groups/participants/${groupId}`,
+       `${import.meta.env.VITE_API_URL}/api/v1/groups/participants/${groupId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -182,7 +182,7 @@ const GroupDetailsPage = () => {
       }
 
       const response = await axios.post(
-        `http://localhost:5000/api/v1/groups/add`,
+       `${import.meta.env.VITE_API_URL}/api/v1/groups/add`,
         {
           groupId: id,
           userEmails: emails,
@@ -244,7 +244,7 @@ const GroupDetailsPage = () => {
       const upperCaseGroupName = groupName.toUpperCase();
 
       const response = await axios.put(
-        `http://localhost:5000/api/v1/groups/${groupId}`,
+      `${import.meta.env.VITE_API_URL}/api/v1/groups/${groupId}`,
         {
           name: upperCaseGroupName,
           color: groupColor,
@@ -313,7 +313,7 @@ const GroupDetailsPage = () => {
           }
 
           const response = await axios.delete(
-            `http://localhost:5000/api/v1/groups/${id}`,
+           `${import.meta.env.VITE_API_URL}/api/v1/groups/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -364,7 +364,7 @@ const GroupDetailsPage = () => {
     try {
       const token = sessionStorage.getItem('token');     
       const response = await axios.get(
-        `http://localhost:5000/api/v1/groups/expenses/${groupId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/groups/expenses/${groupId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -415,7 +415,7 @@ const GroupDetailsPage = () => {
       }
 
       const userResponse = await axios.get(
-        `http://localhost:5000/api/v1/users/email/${email}`,
+       `${import.meta.env.VITE_API_URL}/api/v1/users/email/${email}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -436,7 +436,7 @@ const GroupDetailsPage = () => {
       const upperCaseExpenseName = values.expenseName.toUpperCase(); 
       
       const response = await axios.post(
-        `http://localhost:5000/api/v1/expenses`,
+       `${import.meta.env.VITE_API_URL}/api/v1/expenses`,
         {
           groupId: group.id,
           expenseName: upperCaseExpenseName,
@@ -522,7 +522,7 @@ const GroupDetailsPage = () => {
           }
   
           const response = await axios.delete(
-            `http://localhost:5000/api/v1/expenses/${expenseId}`,
+           `${import.meta.env.VITE_API_URL}/api/v1/expenses/${expenseId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
