@@ -8,10 +8,11 @@ import Login from './pages/auth/login';
 import Register from './pages/auth/signup';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import NotFoundPage from './pages/notFoundPage'
+import HomePage from './pages';
 
 const routes = [
   // Rutas protegidas
-  { path: '/', element: <ProtectedRoute><GroupsPage /></ProtectedRoute> },
+  { path: '/', element: <ProtectedRoute><HomePage /></ProtectedRoute> },
   { path: '/friends', element: <ProtectedRoute><FriendsPage /></ProtectedRoute> },
   { path: '/expenses', element: <ProtectedRoute><ExpensesPage /></ProtectedRoute> },
   { path: '/groups', element: <ProtectedRoute><GroupsPage /></ProtectedRoute> },
