@@ -7,7 +7,7 @@ import GroupDetailsPage from './pages/groups/groupDetails';
 import Login from './pages/auth/login';
 import Register from './pages/auth/signup';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import NotFoundPage from './pages/notFoundPage'
+import NotFoundPage from './pages/notFoundPage';
 import HomePage from './pages';
 
 const routes = [
