@@ -22,6 +22,10 @@ const HeaderView = ({ name }) => {
     navigate('/auth/login');
   };
 
+  const handleHomeNavigation = () => {
+    navigate('/');
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -47,7 +51,10 @@ const HeaderView = ({ name }) => {
   return (
     <header className="bg-[#36190D] relative">
       <div className="container font-fredoka mx-auto flex flex-wrap items-center justify-between py-2 md:px-10">
-        <div className="flex items-end pl-5 md:items-center md:pl-0">
+      <button 
+          className="flex items-end pl-5 md:items-center md:pl-0 bg-transparent border-none focus:outline-none"
+          onClick={handleHomeNavigation}
+        >
           <img
             src={logo}
             alt="Workflow"
@@ -56,7 +63,7 @@ const HeaderView = ({ name }) => {
           <h1 className="text-xl font-bold text-[#f9f9f9] min-w-full md:min-w-0 md:text-4xl md:font-extrabold md:pt-4">
             Mi Vaquita
           </h1>
-        </div>
+        </button>
         <div className="absolute top-4 right-0 md:top-8" ref={menuRef}>
           <button onClick={handleMenuToggle}>
             <BiSolidUserCircle className="text-4xl text-[#f9f9f9] mr-3" />
@@ -81,8 +88,7 @@ const HeaderView = ({ name }) => {
 };
 
 HeaderView.propTypes = {
-  name: PropTypes.string,
-  onLogout: PropTypes.func,
+  name: PropTypes.string, 
 };
 
 export default HeaderView;
