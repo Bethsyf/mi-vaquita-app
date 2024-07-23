@@ -31,7 +31,7 @@ const GroupsPage = () => {
         return;
       }
 
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/groups`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/groups`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -63,7 +63,7 @@ const GroupsPage = () => {
       const upperCaseGroupName = groupName.toUpperCase();
 
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/groups`,
+        `${import.meta.env.VITE_API_URL}/groups`,
         {
           name: upperCaseGroupName,
           color: groupColor,

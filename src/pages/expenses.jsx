@@ -15,7 +15,7 @@ const ExpensesPage = () => {
   const getExpenses = async () => {
     try {
       const token = sessionStorage.getItem('token');
-      const response = await axios.get( `${import.meta.env.VITE_API_URL}/api/v1/expenses/user/${userId}`, {
+      const response = await axios.get( `${import.meta.env.VITE_API_URL}/expenses/user/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
