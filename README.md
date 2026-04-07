@@ -9,6 +9,15 @@
 🔗 **Demo:** [mi-vaquita-app.vercel.app](https://mi-vaquita-app.vercel.app/auth/login)  
 🔗 **API:** [mi-vaquita-api](https://github.com/Bethsyf/mi-vaquita-api)
 
+## 🧪 Test Credentials
+
+Want to try the app without registering? Use these demo accounts:
+
+| User | Email | Password |
+|------|-------|----------|
+| Demo 1 😍 | demo1@mivaquita.com | Demo-1234 |
+| Demo 2 😳 | demo2@mivaquita.com | Demo-1234 |
+
 ---
 
 ## ✨ Funcionalidades
