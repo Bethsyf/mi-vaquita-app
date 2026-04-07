@@ -1,14 +1,133 @@
 ![Mi Vaquita](https://res.cloudinary.com/dmaviub4l/image/upload/v1711547483/h4mcpdoav6plnxmjbpzx.svg)
 
-# Mi Vaquita APP
+# 🐄 Mi Vaquita App
 
-**My Vaquita APP is a user-friendly application designed to manage expenses with friends or family effortlessly and seamlessly.**
+**Aplicación fullstack para dividir gastos entre amigos y grupos de forma simple y transparente.**
 
-# React + Vite
+> ¿Salieron a comer? ¿Alguien pagó el Airbnb? Mi Vaquita calcula automáticamente cuánto debe reembolsar cada persona y a quién.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🔗 **Demo:** [mi-vaquita-app.vercel.app](https://mi-vaquita-app.vercel.app/auth/login)  
+🔗 **API:** [mi-vaquita-api](https://github.com/Bethsyf/mi-vaquita-api)
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Funcionalidades
+
+- 🔐 Autenticación de usuarios (registro e inicio de sesión)
+- 👥 Creación de grupos con múltiples participantes
+- 💸 Registro de gastos indicando quién pagó y cuánto
+- 🧮 Cálculo automático de lo que debe reembolsar cada persona
+- 📋 Historial de gastos por grupo
+- 📱 Diseño responsive para móvil y escritorio
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+| Tecnología | Uso |
+|-----------|-----|
+| React | Librería de UI |
+| Vite | Bundler y entorno de desarrollo |
+| Tailwind CSS | Estilos y diseño responsive |
+| React Router | Navegación entre vistas |
+| Axios | Consumo de la API REST |
+
+### Backend
+| Tecnología | Uso |
+|-----------|-----|
+| Node.js | Entorno de ejecución |
+| Express | Framework del servidor |
+| PostgreSQL | Base de datos relacional |
+| JWT | Autenticación con tokens |
+
+---
+
+## 🏗️ Arquitectura
+
+```
+mi-vaquita-app/          ← Frontend (este repo)
+│
+├── src/
+│   ├── components/      ← Componentes reutilizables
+│   ├── pages/           ← Vistas principales
+│   ├── services/        ← Llamadas a la API
+│   └── context/         ← Estado global
+│
+mi-vaquita-api/          ← Backend (repo separado)
+│
+├── src/
+│   ├── routes/          ← Endpoints REST
+│   ├── controllers/     ← Lógica de negocio
+│   └── models/          ← Modelos de base de datos
+```
+
+---
+
+## 🚀 Correr el proyecto localmente
+
+### Prerrequisitos
+- Node.js 18+
+- PostgreSQL corriendo localmente
+- El backend configurado ([ver instrucciones aquí](https://github.com/Bethsyf/mi-vaquita-api))
+
+### Pasos
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/Bethsyf/mi-vaquita-app.git
+cd mi-vaquita-app
+
+# 2. Instalar dependencias
+yarn install
+
+# 3. Crear archivo de variables de entorno
+cp .env.example .env
+# Editar .env con la URL de tu API local
+
+# 4. Correr en modo desarrollo
+yarn dev
+```
+
+Abre [http://localhost:5173](http://localhost:5173) en tu navegador.
+
+---
+
+## 🌍 Variables de entorno
+
+Crea un archivo `.env` en la raíz con:
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+---
+
+## 📸 Capturas
+
+> *Próximamente — el deploy del backend está siendo migrado a Railway.*
+
+---
+
+## 🎯 Contexto del proyecto
+
+Este proyecto fue construido como parte de un curso enfocado en desarrollo fullstack, con énfasis en aprender a construir y consumir una API REST propia. El objetivo principal fue entender cómo se conectan el frontend y el backend en una aplicación real con autenticación y base de datos.
+
+**Aprendizajes clave:**
+- Diseño e implementación de una API REST desde cero
+- Autenticación con JWT (registro, login, rutas protegidas)
+- Manejo de estado global en React
+- Conexión frontend-backend con variables de entorno
+
+---
+
+## 👩‍💻 Autora
+
+**Bethsy Falcon** — Desarrolladora Frontend  
+[LinkedIn](https://www.linkedin.com/in/bethsyfalcon-frontend/) · [GitHub](https://github.com/Bethsyf) · [Portfolio](https://portfolio-bfb.vercel.app)
+
+---
+
+## 📄 Licencia
+
+MIT © [Bethsy Falcon](https://github.com/Bethsyf)
