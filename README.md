@@ -63,14 +63,9 @@ mi-vaquita-app/          ← Frontend (este repo)
 │   ├── services/        ← Llamadas a la API
 │   └── context/         ← Estado global
 │
-mi-vaquita-api/          ← Backend (repo separado)
-│
-├── src/
-│   ├── routes/          ← Endpoints REST
-│   ├── controllers/     ← Lógica de negocio
-│   └── models/          ← Modelos de base de datos
-```
 
+```
+El backend esta en un repo aparte
 ---
 
 ## 🚀 Correr el proyecto localmente
@@ -112,15 +107,9 @@ VITE_API_URL=http://localhost:3000
 
 ---
 
-## 📸 Capturas
-
-> *Próximamente — el deploy del backend está siendo migrado a Railway.*
-
----
-
 ## 🎯 Contexto del proyecto
 
-Este proyecto fue construido como parte de un curso enfocado en desarrollo fullstack, con énfasis en aprender a construir y consumir una API REST propia. El objetivo principal fue entender cómo se conectan el frontend y el backend en una aplicación real con autenticación y base de datos.
+Este proyecto fue construido como parte de un curso enfocado en desarrollo backend, con énfasis en aprender a construir y consumir una API REST propia. El objetivo principal fue entender cómo se conectan el frontend y el backend en una aplicación real con autenticación y base de datos.
 
 **Aprendizajes clave:**
 - Diseño e implementación de una API REST desde cero
